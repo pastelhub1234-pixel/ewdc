@@ -1,7 +1,20 @@
-[
-  { "id": "t1", "task": "치지직 뱅온 알림 및 공지사항 확인하기", "url": "https://chzzk.naver.com" },
-  { "id": "t2", "task": "신곡 'Universe' 음원 사이트 스밍 인증샷 남기기", "url": "https://cafe.naver.com/stelive" },
-  { "id": "t3", "task": "팬카페 베스트 게시글 10곳 응원 댓글 달기", "url": "https://cafe.naver.com/stelive" },
-  { "id": "t4", "task": "다음 주 합방 콘텐츠 아이디어 설문 참여", "url": "https://docs.google.com/forms/example" },
-  { "id": "t5", "task": "공식 스토어 2주년 굿즈 재입고 알림 설정", "url": "https://smartstore.naver.com/stellive" }
-]
+{
+  "dailyMissions": [
+    { "id": "t1", "task": "치지직 뱅온 알림 및 공지사항 확인하기", "url": "https://chzzk.naver.com" },
+    { "id": "t2", "task": "신곡 'Universe' 음원 사이트 스밍 인증샷 남기기", "url": "https://cafe.naver.com/stelive" },
+    { "id": "t3", "task": "팬카페 베스트 게시글 10곳 응원 댓글 달기", "url": "https://cafe.naver.com/stelive" },
+    { "id": "t4", "task": "다음 주 합방 콘텐츠 아이디어 설문 참여", "url": "https://docs.google.com/forms/example" },
+    { "id": "t5", "task": "공식 스토어 2주년 굿즈 재입고 알림 설정", "url": "https://smartstore.naver.com/stellive" }
+  ],
+  "rewardImage": {
+    "url": "https://images.unsplash.com/photo-1492633423870-43d1cd2775eb?auto=format&fit=crop&w=800&q=80",
+    "caption": "오늘도 함께해줘서 고마워요! 💜",
+    "unlockedMessage": "🎉 미션 클리어! 보상 획득"
+  },
+  "quickActions": [
+    { "id": "q1", "label": "팬카페 응원 댓글", "url": "https://cafe.naver.com/stelive", "type": "message" },
+    { "id": "q2", "label": "추천 영상 시청", "url": "https://youtube.com/...", "type": "play" },
+    { "id": "q3", "label": "인기 투표 참여", "url": "https://vote.com/...", "type": "star" },
+    { "id": "q4", "label": "팬아트 구경하기", "url": "https://cafe.naver.com/...", "type": "heart" }
+  ]
+}
