@@ -30,7 +30,7 @@ interface LocalTodo extends TodoItem {
   completed: boolean;
 }
 
-export function TodoDashboard() {
+export function TodoList() {
   // 2. 전체 데이터 객체 가져오기
   const { data: serverData, loading, error } = useJsonData<TodoData>('todo');
   const [todos, setTodos] = useState<LocalTodo[]>([]);
