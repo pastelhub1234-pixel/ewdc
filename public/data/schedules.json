@@ -1,0 +1,37 @@
+[
+  {
+    "id": "1",
+    "date": "2026-01-09T00:00:00Z",
+    "title": "JISOO Birthday",
+    "description": "Happy Birthday to JISOO! 🎂",
+    "type": "birthday"
+  },
+  {
+    "id": "2",
+    "date": "2026-01-15T09:00:00Z",
+    "title": "New Album Release",
+    "description": "새 미니앨범 발매! 많은 스트리밍 부탁드립니다.",
+    "type": "comeback"
+  },
+  {
+    "id": "3",
+    "date": "2026-01-20T08:00:00Z",
+    "title": "Music Bank",
+    "description": "KBS Music Bank 컴백 무대",
+    "type": "broadcast"
+  },
+  {
+    "id": "4",
+    "date": "2026-01-25T10:00:00Z",
+    "title": "Fan Meeting",
+    "description": "서울 팬미팅 - 티켓팅 오픈",
+    "type": "concert"
+  },
+  {
+    "id": "5",
+    "date": "2026-02-14T11:00:00Z",
+    "title": "Valentine Event",
+    "description": "멤버별 초콜릿 만들기 (KST 20:00)",
+    "type": "event"
+  }
+]

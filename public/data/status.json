@@ -1,0 +1,30 @@
+[
+  {
+    "name": "유니",
+    "status": "X_live",
+    "title": "🎁 크리스마스 기념 앨범 수록곡 최초 공개 및 스포일러!",
+    "profileImg": "https://api.dicebear.com/7.x/adventurer/svg?seed=Uni",
+    "liveUrl": "https://chzzk.naver.com/live/uni"
+  },
+  {
+    "name": "리제",
+    "status": "chzzk_live",
+    "title": "주옥같은 토크 방송: 오늘 저녁 뭐 먹을까요? 메뉴 추천받음",
+    "profileImg": "https://api.dicebear.com/7.x/adventurer/svg?seed=Lize",
+    "liveUrl": "https://chzzk.naver.com/live/lize"
+  },
+  {
+    "name": "시로",
+    "status": "offline",
+    "title": "녹화 방송 편집 중 (내일 오후 8시 업로드)",
+    "profileImg": "https://api.dicebear.com/7.x/adventurer/svg?seed=Siro",
+    "liveUrl": "https://chzzk.naver.com/live/siro"
+  },
+  {
+    "name": "히나",
+    "status": "chzzk_live",
+    "title": "🎮 마스터 갈 때까지 안 잡니다. (feat. 롤 랭크 게임)",
+    "profileImg": "https://api.dicebear.com/7.x/adventurer/svg?seed=Hina",
+    "liveUrl": "https://chzzk.naver.com/live/hina"
+  }
+]

@@ -1,0 +1,26 @@
+{
+  "songTitle": "Universe (Stella Edition)",
+  "Img": "https://images.unsplash.com/photo-1614613535308-eb5fbd3d2c17?auto=format&fit=crop&w=800&q=80", 
+  "platforms": [
+    { 
+      "name": "Melon", 
+      "url": "https://www.melon.com", 
+      "iconImg": "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d4/Melon_logo.png/600px-Melon_logo.png" 
+    },
+    { 
+      "name": "Genie", 
+      "url": "https://www.genie.co.kr", 
+      "iconImg": "https://image.genie.co.kr/Y/IMAGE/IMG_MUZIC/GENIE_LOGO_2023.PNG" 
+    },
+    { 
+      "name": "YouTube Music", 
+      "url": "https://music.youtube.com", 
+      "iconImg": "https://upload.wikimedia.org/wikipedia/commons/thumb/6/6a/Youtube_Music_logo.svg/600px-Youtube_Music_logo.svg.png" 
+    },
+    { 
+      "name": "Spotify", 
+      "url": "https://www.spotify.com", 
+      "iconImg": "https://upload.wikimedia.org/wikipedia/commons/thumb/1/19/Spotify_logo_without_text.svg/600px-Spotify_logo_without_text.svg.png" 
+    }
+  ]
+}

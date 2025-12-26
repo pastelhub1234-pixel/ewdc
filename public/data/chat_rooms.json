@@ -1,0 +1,26 @@
+[
+  {
+    "roomId": "1",
+    "roomName": "🎮 신작 게임 합방 대기실",
+    "roomImg": "https://api.dicebear.com/7.x/identicon/svg?seed=game",
+    "todayPostCount": 124,
+    "lastPost": "오늘 9시에 스팀에서 모여요! 다들 늦지 마세요!",
+    "lastPostTime": "2025-12-19T12:00:00Z" 
+  },
+  {
+    "roomId": "2",
+    "roomName": "🎤 노래뱅 신청곡 받는 곳",
+    "roomImg": "https://api.dicebear.com/7.x/identicon/svg?seed=music",
+    "todayPostCount": 45,
+    "lastPost": "다음 신청곡은 '고민중독'으로 결정되었습니다.",
+    "lastPostTime": "2025-12-19T21:15:00Z"
+  },
+  {
+    "roomId": "3",
+    "roomName": "🎨 팬아트 공유 게시판",
+    "roomImg": "https://api.dicebear.com/7.x/identicon/svg?seed=art",
+    "todayPostCount": 89,
+    "lastPost": "이번에 새로 그린 2주년 축전입니다!",
+    "lastPostTime": "2025-12-20T09:30:00Z"
+  }
+]

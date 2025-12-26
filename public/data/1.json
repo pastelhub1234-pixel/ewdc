@@ -1,0 +1,6 @@
+[
+  { "type": "TEXT", "name": "히나", "profileImg": "https://api.dicebear.com/7.x/adventurer/svg?seed=Hina", "content": "어제 새벽까지 연습해봤는데 생각보다 조작감이 어렵더라고요 ㅠㅠ 다들 적응 하셨나요?", "time": "2025-12-19T10:00:00Z" },
+  { "type": "IMAGE", "name": "히나", "profileImg": "https://api.dicebear.com/7.x/adventurer/svg?seed=Hina", "content": "https://images.unsplash.com/photo-1542751371-adc38448a05e?auto=format&fit=crop&w=800", "time": "2025-12-19T10:05:00Z" },
+  { "type": "TEXT", "name": "히나", "profileImg": "https://api.dicebear.com/7.x/adventurer/svg?seed=Hina", "content": "오늘 밤 9시에 스팀 정규 방송에서 모여요! 새로운 맵 탐방할 예정입니다!", "time": "2025-12-19T12:00:00Z" },
+  { "type": "TEXT", "name": "히나", "profileImg": "https://api.dicebear.com/7.x/adventurer/svg?seed=Hina", "content": "방금 공지 올라갔으니까 확인 한 번씩 부탁드려요~", "time": "2025-12-19T12:05:00Z" }
+]

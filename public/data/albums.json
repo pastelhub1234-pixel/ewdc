@@ -1,0 +1,7 @@
+[
+  { "id": "alb_01", "title": "STELLARHOOD", "type": "Single", "year": "2023", "colorClass": "bg-gradient-to-br from-purple-500 to-indigo-600" },
+  { "id": "alb_02", "title": "Winter Flower", "type": "EP", "year": "2024", "colorClass": "bg-gradient-to-br from-blue-400 to-cyan-300" },
+  { "id": "alb_03", "title": "Milky Way", "type": "Regular", "year": "2025", "colorClass": "bg-gradient-to-br from-pink-400 to-rose-300" },
+  { "id": "alb_04", "title": "Starlight", "type": "Single", "year": "2025", "colorClass": "bg-gradient-to-br from-yellow-300 to-orange-400" },
+  { "id": "alb_05", "title": "Nebula Dreams", "type": "EP", "year": "2026", "colorClass": "bg-gradient-to-br from-green-400 to-teal-500" }
+]

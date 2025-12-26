@@ -1,0 +1,23 @@
+[
+  { 
+    "type": "TEXT", 
+    "name": "시로",
+    "profileImg": "https://.../ine_avatar_01.png",
+    "content": "어제ㄴㅁㅇㄻㄷㅁㄷㄹ ㅋㅋ", 
+    "time": "2025-12-19T10:00:00Z" 
+  },
+  { 
+    "type": "IMAGE", 
+    "name": "시로",
+    "profileImg": "https://.../ine_avatar_01.png",
+    "content": "https://.../game_ss.jpg", 
+    "time": "2025-12-19T10:05:00Z" 
+  },
+  { 
+    "type": "TEXT", 
+    "name": "시로",
+    "profileImg": "https://.../ine_avatar_02.png",
+    "content": "ㅁㅁ에서 모여요!", 
+    "time": "2025-12-19T12:00:00Z" 
+  }
+]

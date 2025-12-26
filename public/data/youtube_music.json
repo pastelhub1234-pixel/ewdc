@@ -1,0 +1,29 @@
+[
+  {
+    "id": "yt_m_01",
+    "title": "[Cover] 아카네 리제 - 주옥같다 (Original: 비비)",
+    "thumbnailUrl": "https://images.unsplash.com/photo-1493225255756-d9584f8606e9?w=800",
+    "profileImg": "https://api.dicebear.com/7.x/adventurer/svg?seed=Lize",
+    "videoUrl": "https://www.youtube.com/watch?v=music1",
+    "name": "리제",
+    "time": "2025-12-10T12:00:00Z"
+  },
+  {
+    "id": "yt_m_02",
+    "title": "[Cover] 시라유키 히나 - 사랑비 (Original: 김태우)",
+    "thumbnailUrl": "https://images.unsplash.com/photo-1520690214124-2405c5217036?w=800",
+    "profileImg": "https://api.dicebear.com/7.x/adventurer/svg?seed=Hina",
+    "videoUrl": "https://www.youtube.com/watch?v=music2",
+    "name": "히나",
+    "time": "2025-12-15T19:00:00Z"
+  },
+  {
+    "id": "yt_m_03",
+    "title": "[Original] 유니(Uni) - Universe (Official Audio)",
+    "thumbnailUrl": "https://images.unsplash.com/photo-1614613535308-eb5fbd3d2c17?w=800",
+    "profileImg": "https://api.dicebear.com/7.x/adventurer/svg?seed=Uni",
+    "videoUrl": "https://www.youtube.com/watch?v=music3",
+    "name": "유니",
+    "time": "2025-11-20T12:00:00Z"
+  }
+]

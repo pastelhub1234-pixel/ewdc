@@ -1,0 +1,32 @@
+[
+  {
+    "id": "t1",
+    "bgClass": "bg-gradient-to-br from-purple-50 to-white border-purple-100",
+    "status": "upcoming",
+    "dDay": "D-3",
+    "title": "2025 스텔라이브 첫 번째 단독 콘서트 : MILKY WAY",
+    "date": "2025. 12. 25 (토) 18:00",
+    "openTime": "2025. 11. 30 (월) 20:00",
+    "site": "인터파크 티켓"
+  },
+  {
+    "id": "t2",
+    "bgClass": "bg-white border-gray-100",
+    "status": "open",
+    "dDay": "OPEN",
+    "title": "유니 생일 파티 공식 팬미팅",
+    "date": "2025. 05. 21 (수) 20:00",
+    "openTime": "상시 예매 가능",
+    "site": "멜론 티켓"
+  },
+  {
+    "id": "t3",
+    "bgClass": "bg-gray-50 border-gray-200 opacity-70",
+    "status": "closed",
+    "dDay": "END",
+    "title": "스텔라이브 2주년 기념 팝업 사전 입장권",
+    "date": "2025. 02. 20 (목) 10:00",
+    "openTime": "종료된 예매입니다",
+    "site": "네이버 예약"
+  }
+]

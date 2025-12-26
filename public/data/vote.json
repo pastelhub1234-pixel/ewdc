@@ -1,0 +1,23 @@
+[
+  {
+    "title": "마인크래프트 야생 24시간 생존기",
+    "type": "contents",
+    "imageUrl": "https://images.unsplash.com/photo-1587573089734-09cb69c0f2b4?w=400",
+    "url": "https://vote.stella.com/1321",
+    "importance": true
+  },
+  {
+    "title": "한여름 밤의 공포 게임 버티기 (VR)",
+    "type": "game",
+    "imageUrl": "https://images.unsplash.com/photo-1511512578047-dfb367046420?w=400",
+    "url": "https://vote.stella.com/3200",
+    "importance": false
+  },
+  {
+    "title": "팬들이 정해주는 코스프레 방송",
+    "type": "special",
+    "imageUrl": "https://images.unsplash.com/photo-1541560052-5e137f229371?w=400",
+    "url": "https://vote.stella.com/3205",
+    "importance": true
+  }
+]

@@ -1,0 +1,7 @@
+[
+  { "rank": 1, "name": "파스텔A", "profileImg": "https://api.dicebear.com/7.x/avataaars/svg?seed=A", "category": "ART" },
+  { "rank": 2, "name": "리듬장인", "profileImg": "https://api.dicebear.com/7.x/avataaars/svg?seed=B", "category": "GAME" },
+  { "rank": 3, "name": "노래하는고양이", "profileImg": "https://api.dicebear.com/7.x/avataaars/svg?seed=C", "category": "MUSIC" },
+  { "rank": 4, "name": "굿즈수집가", "profileImg": "https://api.dicebear.com/7.x/avataaars/svg?seed=D", "category": "SUPPORT" },
+  { "rank": 5, "name": "스텔라러버", "profileImg": "https://api.dicebear.com/7.x/avataaars/svg?seed=E", "category": "ART" }
+]

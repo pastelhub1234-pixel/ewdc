@@ -1,0 +1,44 @@
+[
+  { 
+    "type": "TEXT", 
+    "name": "시로",
+    "profileImg": "https://api.dicebear.com/7.x/adventurer/svg?seed=Siro",
+    "content": "어제 방송 끝나고 나서 혼자 좀 더 연습해봤는데, 확실히 손에 익으니까 콤보 넣는 게 훨씬 수월해진 것 같아요! ㅋㅋ 다들 어제 꿀잠 자셨나요?", 
+    "time": "2025-12-19T10:00:00Z" 
+  },
+  { 
+    "type": "IMAGE", 
+    "name": "시로",
+    "profileImg": "https://api.dicebear.com/7.x/adventurer/svg?seed=Siro",
+    "content": "https://images.unsplash.com/photo-1542751371-adc38448a05e?auto=format&fit=crop&w=800", 
+    "time": "2025-12-19T10:05:00Z" 
+  },
+  { 
+    "type": "TEXT", 
+    "name": "시로",
+    "profileImg": "https://api.dicebear.com/7.x/adventurer/svg?seed=Siro",
+    "content": "오늘 저녁 7시에 치지직에서 모여요! 새로운 맵이랑 아이템들 같이 구경하면서 수다 좀 떨려고요. 맛있는 거 챙겨서 오세요!", 
+    "time": "2025-12-19T12:00:00Z" 
+  },
+  { 
+    "type": "TEXT", 
+    "name": "시로",
+    "profileImg": "https://api.dicebear.com/7.x/adventurer/svg?seed=Siro",
+    "content": "아 맞다, 그리고 이번에 새로 나온 굿즈 샘플 봤는데 진짜 너무 귀엽게 잘 나왔더라고요... 빨리 보여드리고 싶어서 입이 간질간질하네요.", 
+    "time": "2025-12-19T12:05:00Z" 
+  },
+  { 
+    "type": "IMAGE", 
+    "name": "시로",
+    "profileImg": "https://api.dicebear.com/7.x/adventurer/svg?seed=Siro",
+    "content": "https://images.unsplash.com/photo-1511512578047-dfb367046420?auto=format&fit=crop&w=800", 
+    "time": "2025-12-19T14:30:00Z" 
+  },
+  { 
+    "type": "TEXT", 
+    "name": "시로",
+    "profileImg": "https://api.dicebear.com/7.x/adventurer/svg?seed=Siro",
+    "content": "지금 열심히 세팅 중인데 기술적인 문제가 살짝 있어서 한 10분 정도만 늦어질 수도 있을 것 같아요! 금방 해결하고 올게요. 조금만 기다려주세요!", 
+    "time": "2025-12-19T18:50:00Z" 
+  }
+]

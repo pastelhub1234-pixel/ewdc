@@ -1,0 +1,17 @@
+[
+  {
+    "id": "1",
+    "title": "유니의 마카롱 타이쿤",
+    "creator": "개발파스텔",
+    "shortDesc": "유니와 함께 마카롱 가게를 운영해보세요!",
+    "fullDesc": "어느 날 갑작스럽게 디저트 가게 사장님이 된 유니! 몰려오는 파스텔 손님들의 취향에 맞춰 정확한 재료 배합으로 마카롱을 제작해야 합니다. 스테이지가 올라갈수록 복잡한 주문이 들어오며, 유니의 컨디션을 관리해주는 미니게임도 포함되어 있습니다. 유니의 실제 보이스가 포함된 50개 이상의 컷신을 감상해보세요.",
+    "thumbnailUrl": "https://images.unsplash.com/photo-1551024506-0bccd828d307?w=800",
+    "gifUrl": "https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExNHY4dGdyN3p4N3p4N3p4N3p4N3p4N3p4N3p4N3p4N3p4N3p4JmVwPXYxX2ludGVybmFsX2dpZl9ieV9pZCZjdD1n/3o7TKMGpxx6b6Zz1S8/giphy.gif",
+    "imageUrls": [
+      "https://images.unsplash.com/photo-1528975604071-b4dc52a2d18c?w=600",
+      "https://images.unsplash.com/photo-1558326567-98ae2405596b?w=600"
+    ],
+    "downloadUrl": "https://itch.io/stella/uni-macaron",
+    "time": "2025-12-15T14:00:00Z"
+  }
+]

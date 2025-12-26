@@ -1,0 +1,16 @@
+[
+  {
+    "platform": "Naver Lounge",
+    "priceDesc": "월 3,300원",
+    "desc": "공식 팬카페 정회원 등급 & 전용 게시판",
+    "bgColor": "bg-gradient-to-r from-green-50 to-emerald-50",
+    "btnColor": "bg-green-500 hover:bg-green-600"
+  },
+  {
+    "platform": "YouTube Membership",
+    "priceDesc": "월 4,990원",
+    "desc": "전용 이모티콘 & 회원 전용 라이브",
+    "bgColor": "bg-gradient-to-r from-red-50 to-rose-50",
+    "btnColor": "bg-red-500 hover:bg-red-600"
+  }
+]
