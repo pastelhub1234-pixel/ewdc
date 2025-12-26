@@ -3,6 +3,7 @@ import { useParams } from 'react-router-dom';
 import { List, AlignLeft, ChevronRight, Circle } from 'lucide-react';
 import { useJsonData } from '../../../hooks/useJsonData';
 
+// ✅ 1. 데이터 타입 정의 (guides.json 구조와 일치)
 interface GuideItemData {
   label: string;
   content?: string;
@@ -15,6 +16,7 @@ interface GuideGroup {
   items: GuideItemData[];
 }
 
+// ✅ 2. 재귀 컴포넌트: 깊이(depth)만큼 들여쓰기 하며 렌더링
 const RecursiveItem = ({ item, depth = 0 }: { item: GuideItemData; depth: number }) => {
   return (
     <div className={`flex flex-col gap-2 ${depth > 0 ? 'mt-3' : 'mt-6'}`}>
@@ -62,14 +64,15 @@ const RecursiveItem = ({ item, depth = 0 }: { item: GuideItemData; depth: number
 };
 
 export function WikiGuideSection() {
-  const { slug } = useParams();
-  const { data: allGuides, loading } = useJsonData<GuideGroup[]>('guides');
+  const { slug } = useParams(); // URL에서 'basic', 'goods' 등을 가져옴
+  const { data: allGuides, loading } = useJsonData<GuideGroup[]>('guides'); // 데이터 로드
   const [targetGuide, setTargetGuide] = useState<GuideGroup | null>(null);
   const [activeSection, setActiveSection] = useState<number>(0);
   
   // 섹션 참조용 Refs
   const sectionRefs = useRef<(HTMLDivElement | null)[]>([]);
 
+  // 1. URL 슬러그에 맞는 가이드 데이터 찾기
   useEffect(() => {
     if (allGuides && slug) {
       const found = allGuides.find(g => g.id === slug);
@@ -77,9 +80,11 @@ export function WikiGuideSection() {
     }
   }, [allGuides, slug]);
 
-  // 스크롤 감지 (목차 하이라이팅)
+  // 2. 스크롤 감지 (목차 하이라이팅)
   useEffect(() => {
     if (!targetGuide) return;
+    
+    // ✅ 중요: GuidePage에서 설정한 ID를 타겟팅
     const scrollContainer = document.getElementById('guide-scroll-container');
     if (!scrollContainer) return;
 
@@ -93,8 +98,8 @@ export function WikiGuideSection() {
         });
       },
       {
-        root: scrollContainer,
-        rootMargin: '-10% 0px -80% 0px',
+        root: scrollContainer, // 뷰포트가 아닌 스크롤 컨테이너 기준
+        rootMargin: '-10% 0px -80% 0px', // 상단 10% 지점에 오면 감지
         threshold: 0
       }
     );
@@ -106,12 +111,14 @@ export function WikiGuideSection() {
     return () => observer.disconnect();
   }, [targetGuide]);
 
+  // 3. 목차 클릭 시 스크롤 이동
   const scrollToSection = (index: number) => {
     const container = document.getElementById('guide-scroll-container');
     const element = document.getElementById(`section-${index}`);
     
     if (container && element) {
       const headerOffset = 24; 
+      // 컨테이너 내부에서의 요소 위치 계산 (offsetTop 사용)
       const elementPosition = element.offsetTop;
       
       container.scrollTo({
@@ -144,10 +151,11 @@ export function WikiGuideSection() {
             targetGuide.items.map((item, idx) => (
               <div 
                 key={idx} 
-                id={`section-${idx}`} 
+                id={`section-${idx}`} // 스크롤 타겟 ID
                 ref={el => sectionRefs.current[idx] = el}
                 className="scroll-mt-8 mb-10 last:mb-0" // 섹션 간 간격 확보
               >
+                {/* 재귀 컴포넌트로 데이터 깊이만큼 렌더링 */}
                 <RecursiveItem item={item} depth={0} />
               </div>
             ))
