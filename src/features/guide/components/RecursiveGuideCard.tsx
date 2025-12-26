@@ -16,58 +16,92 @@ export function RecursiveGuideCard({ item, depth = 0 }: Props) {
   const [isOpen, setIsOpen] = useState(true);
   const hasChildren = item.children && item.children.length > 0;
 
-  // Depth 0: 메인 카드 (흰색 배경, 그림자)
-  // Depth > 0: 내부 리스트 (여백 최소화)
-  const containerStyle = depth === 0 
-    ? 'bg-white border border-gray-200 shadow-sm rounded-2xl mb-4 overflow-hidden'
-    : 'mt-1'; // 하위 항목 간격 좁힘
+  // ─────────────────────────────────────────────────────────────
+  // 스타일 정의
+  // ─────────────────────────────────────────────────────────────
+  
+  // Depth 0: 메인 섹션 스타일 (카드 형태, 그림자, 강조 테두리)
+  const mainCardStyle = `
+    bg-white border border-gray-200 rounded-2xl mb-6 overflow-hidden 
+    shadow-[0_2px_8px_rgba(0,0,0,0.04)] transition-all duration-300
+    hover:border-indigo-200 hover:shadow-md
+  `;
 
-  // 텍스트 스타일: 깊이가 깊어질수록 조금씩 작게, 하지만 너무 작지 않게
-  const labelStyle = depth === 0 
-    ? 'text-lg font-bold text-gray-900' 
-    : 'text-[15px] font-medium text-gray-700 leading-relaxed';
+  // Depth > 0: 하위 리스트 스타일 (심플함)
+  const subItemStyle = `
+    mt-1 border-l-2 border-transparent transition-colors duration-200
+  `;
+
+  // 헤더(버튼) 스타일
+  const headerBaseStyle = "w-full flex items-start text-left transition-colors duration-200 group";
+  const headerDepth0 = "p-5 bg-white hover:bg-indigo-50/30";
+  const headerDepthSub = "py-2 px-3 rounded-lg hover:bg-gray-100";
+
+  // 텍스트 타이포그래피
+  const labelDepth0 = "text-lg font-bold text-gray-900 tracking-tight";
+  const labelDepth1 = "text-[15px] font-semibold text-gray-800";
+  const labelDepthDeep = "text-sm font-medium text-gray-700";
+
+  // 본문 내용 스타일 (가독성 개선: 행간 넓힘, 자간 조절)
+  const contentStyle = `
+    text-[15px] text-gray-600 leading-loose tracking-normal 
+    whitespace-pre-line break-keep max-w-[850px]
+  `;
+
+  // ─────────────────────────────────────────────────────────────
+
+  // 현재 깊이에 따른 라벨 스타일 선택
+  const getLabelStyle = () => {
+    if (depth === 0) return labelDepth0;
+    if (depth === 1) return labelDepth1;
+    return labelDepthDeep;
+  };
 
   return (
-    <div className={containerStyle}>
-      {/* 헤더 영역 */}
+    <div className={depth === 0 ? mainCardStyle : subItemStyle}>
+      {/* --- 헤더 영역 (클릭 시 토글) --- */}
       <button
         onClick={() => setIsOpen(!isOpen)}
-        // 커서: 자식이 없으면(내용글이면) 기본 커서, 있으면 포인터
-        className={`w-full flex items-start text-left transition-colors
-          ${depth === 0 ? 'p-5 hover:bg-gray-50' : 'py-1.5 hover:bg-gray-100/50 rounded lg:px-2'}
-          ${!hasChildren ? 'cursor-text' : 'cursor-pointer'} 
+        className={`
+          ${headerBaseStyle}
+          ${depth === 0 ? headerDepth0 : headerDepthSub}
+          ${!hasChildren ? 'cursor-text' : 'cursor-pointer'}
         `}
       >
-        {/* 아이콘 영역: 내용글(자식이 없는 경우)에는 아이콘을 아예 렌더링하지 않음 */}
+        {/* 아이콘 (내용만 있는 경우 숨김) */}
         {hasChildren && (
-          <div className="flex-shrink-0 mt-1 mr-2">
-            {depth === 0 ? (
-               isOpen ? <ChevronDown className="w-5 h-5 text-indigo-500" /> : <ChevronRight className="w-5 h-5 text-gray-400" />
-            ) : (
-               isOpen ? <ChevronDown className="w-4 h-4 text-indigo-400" /> : <ChevronRight className="w-4 h-4 text-gray-300" />
-            )}
+          <div className={`flex-shrink-0 mr-3 transition-transform duration-200 ${isOpen ? 'rotate-0' : '-rotate-90'}`}>
+             {/* Depth 0은 조금 더 큰 아이콘, 하위는 작은 아이콘 */}
+             <ChevronDown 
+               className={`
+                 ${depth === 0 ? 'w-6 h-6 text-indigo-500' : 'w-4 h-4 mt-0.5 text-gray-400 group-hover:text-indigo-500'}
+               `} 
+             />
           </div>
         )}
 
         {/* 텍스트 영역 */}
         <div className="flex-1">
-          <span className={labelStyle}>{item.label}</span>
+          <span className={getLabelStyle()}>
+            {item.label}
+          </span>
           
-          {/* 부가 설명(content)이 있는 경우 */}
+          {/* 본문 내용이 바로 아래에 붙는 경우 (자식이 없는 Leaf node일 때) */}
           {isOpen && item.content && (
-             <div className={`mt-2 text-sm text-gray-600 leading-7 whitespace-pre-line
-               ${depth === 0 ? 'bg-gray-50 p-4 rounded-xl border border-gray-100' : ''}
-             `}>
+             <div className={`mt-3 ${contentStyle} ${depth === 0 ? 'bg-gray-50/80 p-5 rounded-xl border border-gray-100' : 'pl-1'}`}>
               {item.content}
             </div>
           )}
         </div>
       </button>
 
-      {/* 자식 항목 렌더링 영역 */}
+      {/* --- 자식 항목 렌더링 (재귀) --- */}
       {isOpen && hasChildren && (
         <div className={`
-          ${depth === 0 ? 'border-t border-gray-100 p-4 pt-2 bg-white' : 'pl-4 border-l-2 border-gray-100 ml-2'}
+          ${depth === 0 
+            ? 'border-t border-gray-100 p-5 pt-2 bg-white' // 최상위: 내부 패딩 넉넉히
+            : 'pl-4 ml-1.5 border-l border-gray-200 space-y-1' // 하위: 왼쪽 선으로 계층 표현
+          }
         `}>
           {item.children!.map((child, idx) => (
             <RecursiveGuideCard 
