@@ -1,6 +1,6 @@
 import { useEffect, useState, useRef } from 'react';
 import { useParams } from 'react-router-dom';
-import { List, AlignLeft, ArrowUp } from 'lucide-react';
+import { List, ArrowUp } from 'lucide-react';
 import { useJsonData } from '../../../hooks/useJsonData';
 import { RecursiveGuideCard, GuideItem } from './RecursiveGuideCard';
 
@@ -25,7 +25,7 @@ export function WikiGuideSection() {
     }
   }, [allGuides, slug]);
 
-  // 스크롤 감지 로직 (화면 중앙 기준 인식)
+  // 스크롤 감지 (Spy)
   useEffect(() => {
     if (!targetGuide) return;
     
@@ -43,7 +43,7 @@ export function WikiGuideSection() {
       },
       {
         root: scrollContainer,
-        rootMargin: '-10% 0px -70% 0px', // 상단 10% ~ 하단 70% 사이 영역에 들어오면 활성화
+        rootMargin: '-10% 0px -70% 0px',
         threshold: 0
       }
     );
@@ -60,8 +60,7 @@ export function WikiGuideSection() {
     const element = sectionRefs.current[index];
     
     if (container && element) {
-      // 상단 헤더 높이 등을 고려하여 조금 더 위로 스크롤
-      const topPos = element.offsetTop - 32; 
+      const topPos = element.offsetTop - 30; // 여백 보정
       container.scrollTo({
         top: topPos,
         behavior: "smooth"
@@ -70,61 +69,58 @@ export function WikiGuideSection() {
     }
   };
 
-  if (loading) return <div className="py-32 text-center text-gray-500 animate-pulse">가이드 로딩 중...</div>;
-  if (!targetGuide) return <div className="py-32 text-center text-gray-400">가이드 내용을 찾을 수 없습니다.</div>;
+  if (loading) return <div className="py-20 text-center text-gray-400">로딩 중...</div>;
+  if (!targetGuide) return <div className="py-20 text-center text-gray-400">내용이 없습니다.</div>;
 
   return (
-    <div className="max-w-[1400px] mx-auto px-4 md:px-8 py-10 pb-40">
-      {/* 헤더 섹션 */}
-      <div className="flex items-center gap-4 mb-10 pb-6 border-b border-indigo-50">
-        <div className="p-3 bg-gradient-to-br from-indigo-500 to-violet-600 rounded-2xl text-white shadow-lg shadow-indigo-200">
-           <AlignLeft className="w-7 h-7"/>
-        </div>
-        <div>
-          <h2 className="text-3xl font-extrabold text-gray-900 tracking-tight">{targetGuide.title}</h2>
-          <p className="text-gray-500 text-sm mt-1 ml-1">스텔라이브 팬 가이드 위키</p>
-        </div>
-      </div>
-
-      {/* ✅ [핵심 수정] Grid 레이아웃 적용 
-          - minmax(0, 1fr): 본문 영역이 넘치지 않도록 강제 (중요)
-          - 300px: 목차 영역 고정
-          - md:grid-cols-... : 태블릿 이상에서만 분할, 모바일은 세로 배치
+    // 상단 패딩(pt-10)을 주어 탭과 본문 사이 간격 확보
+    <div className="max-w-[1400px] mx-auto px-5 md:px-8 pt-10 pb-40">
+      
+      {/* ✅ [핵심 수정] Flex Layout 사용 
+        - lg:flex-row: 큰 화면에서는 가로 배치
+        - gap-10: 본문과 목차 사이 간격
       */}
-      <div className="grid grid-cols-1 md:grid-cols-[minmax(0,1fr)_280px] lg:grid-cols-[minmax(0,1fr)_320px] gap-8 lg:gap-12 items-start relative">
+      <div className="flex flex-col lg:flex-row items-start gap-10 relative">
         
-        {/* [왼쪽] 본문 영역 */}
-        <div className="min-w-0">
+        {/* [왼쪽] 본문 영역 
+            - flex-1: 남은 공간 모두 차지
+            - min-w-0: Flex 내부에서 텍스트 넘침 방지
+        */}
+        <div className="flex-1 min-w-0 w-full">
           {targetGuide.items && targetGuide.items.length > 0 ? (
             targetGuide.items.map((item, idx) => (
               <div 
                 key={idx} 
                 data-index={idx}
                 ref={el => sectionRefs.current[idx] = el}
-                className="scroll-mt-8" // 스크롤 시 상단 여백 확보
+                className="scroll-mt-6"
               >
                 <RecursiveGuideCard item={item} depth={0} />
               </div>
             ))
           ) : (
-            <div className="py-20 text-center bg-white rounded-3xl border border-dashed border-gray-200 text-gray-400">
-              작성된 내용이 없습니다.
+            <div className="py-20 text-center bg-gray-50 rounded-2xl border border-dashed border-gray-200 text-gray-400">
+              가이드 내용이 준비되지 않았습니다.
             </div>
           )}
         </div>
 
         {/* [오른쪽] 목차 영역 (Sticky) 
-            - hidden md:block: 모바일에서는 숨김 (또는 하단 배치)
-            - sticky top-8: 스크롤 따라오기
+            - w-[280px]: 너비 고정
+            - shrink-0: 화면이 좁아져도 찌그러지지 않음 (중요)
+            - hidden lg:block: 모바일/태블릿에서는 숨김 (공간 부족 이슈 해결)
+            - sticky top-6: 스크롤 따라오기
         */}
-        <aside className="hidden md:block sticky top-8 self-start w-full">
-          <div className="bg-white rounded-2xl p-6 shadow-[0_10px_30px_rgba(0,0,0,0.04)] border border-gray-100">
-            <h3 className="text-gray-900 font-bold mb-4 flex items-center gap-2 pb-3 border-b border-gray-50">
-               <List className="w-5 h-5 text-indigo-600"/> 
-               <span className="text-base">목차 (Contents)</span>
-            </h3>
+        <aside className="hidden lg:block w-[280px] shrink-0 sticky top-6 z-10">
+          <div className="bg-white rounded-xl border border-gray-100 shadow-[0_4px_20px_rgba(0,0,0,0.02)] overflow-hidden">
+            {/* 목차 헤더 */}
+            <div className="bg-gray-50 px-5 py-3 border-b border-gray-100 flex items-center gap-2">
+               <List className="w-4 h-4 text-indigo-500"/> 
+               <span className="text-sm font-bold text-gray-700">목차</span>
+            </div>
             
-            <nav className="space-y-1 max-h-[calc(100vh-200px)] overflow-y-auto pr-2 custom-scrollbar">
+            {/* 목차 리스트 */}
+            <nav className="p-2 max-h-[70vh] overflow-y-auto custom-scrollbar">
               {targetGuide.items.map((item, idx) => {
                 const isActive = activeSection === idx;
                 return (
@@ -132,35 +128,19 @@ export function WikiGuideSection() {
                     key={idx}
                     onClick={() => scrollToSection(idx)}
                     className={`
-                      group relative flex items-start w-full text-left px-3 py-2.5 rounded-xl transition-all duration-300
+                      w-full text-left px-3 py-2.5 rounded-lg text-sm mb-1 transition-all duration-200 flex items-center justify-between group
                       ${isActive 
-                        ? 'bg-indigo-50 text-indigo-700 font-semibold shadow-sm' 
+                        ? 'bg-indigo-50 text-indigo-700 font-semibold' 
                         : 'text-gray-500 hover:bg-gray-50 hover:text-gray-900'
                       }
                     `}
                   >
-                    {/* 활성 상태 표시 (왼쪽 바) */}
-                    <div className={`
-                      absolute left-0 top-1/2 -translate-y-1/2 w-1 h-0 rounded-r-full bg-indigo-500 transition-all duration-300
-                      ${isActive ? 'h-6 opacity-100' : 'h-0 opacity-0'}
-                    `} />
-                    
-                    <span className={`text-sm leading-snug ${isActive ? 'pl-2' : ''} transition-all`}>
-                      {item.label}
-                    </span>
-                    
-                    {/* Hover 시 화살표 등장 */}
-                    {isActive && (
-                      <ArrowUp className="w-3 h-3 ml-auto text-indigo-400 rotate-45 self-center animate-pulse" />
-                    )}
+                    <span className="truncate pr-2">{item.label}</span>
+                    {isActive && <ArrowUp className="w-3 h-3 text-indigo-400 opacity-50" />}
                   </button>
                 );
               })}
             </nav>
-          </div>
-          
-          <div className="mt-6 text-center">
-            <p className="text-xs text-gray-300 font-light">PastelHub Wiki Guide</p>
           </div>
         </aside>
 
