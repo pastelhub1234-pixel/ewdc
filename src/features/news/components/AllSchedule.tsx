@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { ChevronLeft, ChevronRight, Calendar as CalendarIcon, Clock, MapPin, Info } from 'lucide-react';
 import { useJsonData } from '../../../hooks/useJsonData';
- 
+
 interface ScheduleItem {
   id: string;
   date: string;
@@ -85,25 +85,16 @@ export function AllSchedule() {
 
   return (
     <div className="w-full h-full p-6 overflow-x-auto flex justify-center items-center">
-      {/* 스크롤바 숨김 스타일 */}
       <style>{`
         .scrollbar-hide::-webkit-scrollbar { display: none; }
         .scrollbar-hide { -ms-overflow-style: none; scrollbar-width: none; }
       `}</style>
 
-      {/* [Grid Layout 변경]
-        - grid-cols-4: 전체를 4분할
-        - Left: col-span-1 (1/4)
-        - Center: col-span-2 (2/4 = 1/2)
-        - Right: col-span-1 (1/4)
-        - h-[600px]: 높이 고정 (달력 줄 수 변화에도 UI 흔들림 방지)
-        - max-w-[1400px]: 너무 넓어지지 않게 제한
-      */}
       <div className="min-w-[1000px] max-w-[1400px] w-full h-[600px] grid grid-cols-4 gap-6">
         
-        {/* =======================================================
-            1. [Left] Upcoming List (1/4)
-           ======================================================= */}
+        {/* =======================
+            1. [Left] Upcoming
+           ======================= */}
         <div className="col-span-1 bg-white/70 backdrop-blur-xl rounded-[32px] p-6 shadow-sm border border-white/60 flex flex-col h-full overflow-hidden">
           <div className="flex items-center gap-2 mb-4 pl-1 flex-shrink-0">
             <Clock className="w-5 h-5 text-purple-500" />
@@ -146,12 +137,11 @@ export function AllSchedule() {
           </div>
         </div>
 
-        {/* =======================================================
-            2. [Center] Calendar (2/4)
-            - col-span-2: 너비 2배 확보
-           ======================================================= */}
+        {/* =======================
+            2. [Center] Calendar
+           ======================= */}
         <div className="col-span-2 bg-white/70 backdrop-blur-xl rounded-[32px] p-8 shadow-sm border border-purple-50 flex flex-col h-full overflow-hidden">
-          {/* Calendar Header */}
+          {/* Header */}
           <div className="flex items-center justify-between mb-6 flex-shrink-0 px-2">
             <h3 className="text-gray-800 font-bold flex items-center gap-3 text-3xl tracking-tight">
               <CalendarIcon className="w-8 h-8 text-purple-500" />
@@ -176,9 +166,10 @@ export function AllSchedule() {
             ))}
           </div>
 
-          {/* Days Grid - 높이 고정 상태에서 자연스럽게 배치 */}
-          <div className="flex-1 px-4">
-            <div className="grid grid-cols-7 gap-4 h-full content-start">
+          {/* Days Grid */}
+          {/* [수정 1] padding(p-2) 추가: 맨 아래 칸이나 양옆 칸의 border(ring)가 잘리지 않도록 여백 확보 */}
+          <div className="flex-1 px-2 pb-2">
+            <div className="grid grid-cols-7 gap-4 h-full content-start p-2">
               {Array.from({ length: startingDayOfWeek }).map((_, i) => <div key={`empty-${i}`} />)}
               {Array.from({ length: daysInMonth }).map((_, i) => {
                 const day = i + 1;
@@ -187,7 +178,6 @@ export function AllSchedule() {
                 const isSelected = selectedEvent && new Date(selectedEvent.date).getDate() === day && new Date(selectedEvent.date).getMonth() === currentDate.getMonth();
 
                 return (
-                  /* aspect-square를 사용하여 정사각형 비율 유지하되, 컨테이너 너비에 맞춤 */
                   <button
                     key={day}
                     onClick={() => event && setSelectedEvent(event)}
@@ -209,29 +199,34 @@ export function AllSchedule() {
           </div>
         </div>
 
-        {/* =======================================================
-            3. [Right] Details (1/4)
-           ======================================================= */}
+        {/* =======================
+            3. [Right] Details
+           ======================= */}
         <div className="col-span-1 bg-white/70 backdrop-blur-xl rounded-[32px] p-6 shadow-sm border border-white/60 flex flex-col justify-center text-center h-full relative overflow-hidden">
           {selectedEvent ? (
             <div className="animate-in fade-in zoom-in duration-300 h-full flex flex-col items-center justify-center w-full py-4">
-               <div className="w-24 h-24 mx-auto bg-white rounded-[2rem] shadow-sm flex items-center justify-center text-5xl mb-6 border border-purple-50">
+               
+               {/* [수정 2] flex-shrink-0 추가: 화면이 좁아져도 아이콘 박스가 찌그러지지 않음 */}
+               {/* aspect-square 추가: 정사각형 비율 강력 고정 */}
+               <div className="w-24 h-24 flex-shrink-0 aspect-square mx-auto bg-white rounded-[2rem] shadow-sm flex items-center justify-center text-5xl mb-6 border border-purple-50">
                 {getEventIcon(selectedEvent.type)}
               </div>
               
-              <div className="inline-flex items-center justify-center px-4 py-1.5 mb-5 rounded-full bg-purple-50 text-purple-600 text-[10px] font-bold uppercase tracking-widest border border-purple-100">
+              <div className="inline-flex items-center justify-center px-4 py-1.5 mb-5 rounded-full bg-purple-50 text-purple-600 text-[10px] font-bold uppercase tracking-widest border border-purple-100 flex-shrink-0">
                 {selectedEvent.type}
               </div>
 
-              <h2 className="text-2xl font-bold text-gray-800 mb-4 leading-tight px-2 w-full truncate">
+              {/* [수정 3] truncate 제거: 제목이 길면 말줄임(...) 대신 다음 줄로 넘어감 */}
+              <h2 className="text-2xl font-bold text-gray-800 mb-4 leading-tight px-2 w-full break-keep line-clamp-3">
                 {selectedEvent.title}
               </h2>
               
-              <p className="text-sm text-gray-500 mb-8 leading-relaxed px-2 line-clamp-4 w-full h-[5rem]">
+              {/* [수정 3] line-clamp 완화: 설명글도 더 많이 보이도록 수정 */}
+              <p className="text-sm text-gray-500 mb-6 leading-relaxed px-2 break-keep line-clamp-5">
                 {selectedEvent.description}
               </p>
 
-              <div className="w-full bg-white/60 rounded-3xl p-5 text-left border border-white/80 space-y-4 shadow-sm mt-auto">
+              <div className="w-full bg-white/60 rounded-3xl p-5 text-left border border-white/80 space-y-4 shadow-sm mt-auto flex-shrink-0">
                 <div className="flex items-center gap-4">
                   <div className="w-10 h-10 rounded-xl bg-purple-50 flex items-center justify-center text-purple-500 flex-shrink-0">
                     <CalendarIcon size={18} />
