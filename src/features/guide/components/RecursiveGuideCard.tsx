@@ -1,7 +1,6 @@
 import { useState } from 'react';
-import { ChevronDown, ChevronRight, Circle, Minus } from 'lucide-react';
+import { ChevronDown, ChevronRight, Circle } from 'lucide-react';
 
-// 데이터 타입 정의 (RecursiveGuideCard 내부에서 사용)
 export interface GuideItem {
   label: string;
   content?: string;
@@ -14,80 +13,70 @@ interface Props {
 }
 
 export function RecursiveGuideCard({ item, depth = 0 }: Props) {
-  // depth 0(최상위)만 펼쳐두고, 나머지는 접어두기 (원하시면 true로 변경 가능)
-  const [isOpen, setIsOpen] = useState(true); 
+  const [isOpen, setIsOpen] = useState(true);
   const hasChildren = item.children && item.children.length > 0;
 
-  // ✅ [공간 최적화] 깊이가 깊어질수록 여백을 줄임 (기존 pl-4 -> pl-3 또는 border 방식 활용)
-  // depth가 0일 때는 여백 없음, 그 이상일 때는 왼쪽 여백 및 보더 라인 추가
-  const indentClass = depth > 0 ? 'ml-3 pl-3 border-l border-slate-200' : '';
+  // Depth 0: 메인 카드 (흰색 배경, 그림자)
+  // Depth > 0: 내부 리스트 (배경색 투명/연한 회색, 테두리 최소화)
+  const containerStyle = depth === 0 
+    ? 'bg-white border border-gray-200 shadow-sm rounded-2xl mb-4 overflow-hidden'
+    : 'mt-2 pl-2'; // 깊이가 있을 땐 왼쪽 패딩을 줄여서 공간 확보
 
-  // 깊이에 따른 스타일링 (배경색, 폰트 크기)
-  const headerStyle = depth === 0 
-    ? 'text-lg font-bold text-gray-800 py-4' 
-    : 'text-sm font-medium text-gray-700 py-2.5';
+  // 텍스트 스타일
+  const labelStyle = depth === 0 
+    ? 'text-lg font-bold text-gray-800' 
+    : 'text-sm font-medium text-gray-700';
 
   return (
-    <div className={`transition-all duration-300 ${indentClass}`}>
-      {/* 헤더 (클릭하여 열고 닫기) */}
+    <div className={containerStyle}>
+      {/* 헤더 영역 */}
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className={`w-full flex items-start gap-2 text-left hover:bg-black/5 rounded-lg px-2 -ml-2 transition-colors group ${headerStyle}`}
+        className={`w-full flex items-start gap-3 text-left transition-colors
+          ${depth === 0 ? 'p-5 hover:bg-gray-50' : 'py-2 hover:bg-gray-100/50 rounded-lg px-2'}
+        `}
       >
-        {/* 아이콘: 최상위는 숫자/텍스트만, 자식은 불렛 포인트 */}
-        <div className="mt-1 flex-shrink-0 text-purple-500">
-          {depth === 0 ? null : (
-            hasChildren ? (
-              isOpen ? <ChevronDown size={16} /> : <ChevronRight size={16} />
-            ) : (
-              <Circle size={6} fill="currentColor" className="mt-1.5" />
-            )
-          )}
+        {/* 아이콘/불렛 포인트 처리 */}
+        <div className="flex-shrink-0 mt-1">
+           {depth === 0 ? (
+             // 최상위: 숫자나 아이콘이 없을 경우 깔끔하게 처리
+             isOpen ? <ChevronDown className="w-5 h-5 text-indigo-500" /> : <ChevronRight className="w-5 h-5 text-gray-400" />
+           ) : (
+             // 하위: 작은 점이나 화살표로 공간 절약
+             hasChildren 
+               ? (isOpen ? <ChevronDown className="w-4 h-4 text-indigo-400" /> : <ChevronRight className="w-4 h-4 text-gray-300" />)
+               : <Circle className="w-1.5 h-1.5 mt-1.5 text-gray-300 fill-current" />
+           )}
         </div>
 
         <div className="flex-1">
-          {item.label}
-        </div>
-
-        {/* 최상위 레벨일 때만 우측에 접기 아이콘 표시 */}
-        {depth === 0 && (
-          <div className="text-gray-400 mt-1">
-            {isOpen ? <ChevronDown size={20} /> : <ChevronRight size={20} />}
-          </div>
-        )}
-      </button>
-
-      {/* 내용 영역 (애니메이션 효과) */}
-      <div 
-        className={`grid transition-all duration-300 ease-in-out ${
-          isOpen ? 'grid-rows-[1fr] opacity-100 mb-2' : 'grid-rows-[0fr] opacity-0'
-        }`}
-      >
-        <div className="overflow-hidden">
-          {/* 텍스트 내용 */}
-          {item.content && (
-            <div className={`
-              text-gray-600 leading-relaxed whitespace-pre-line mb-3
-              ${depth === 0 ? 'text-base bg-slate-50 p-4 rounded-xl border border-slate-100' : 'text-sm pl-2'}
-            `}>
+          <span className={labelStyle}>{item.label}</span>
+          
+          {/* 하위 항목이 열려있고, 내용이 있을 때 바로 아래에 내용 표시 */}
+          {isOpen && item.content && (
+             <div className={`mt-2 text-sm text-gray-600 leading-relaxed whitespace-pre-line
+               ${depth === 0 ? 'bg-gray-50 p-4 rounded-xl border border-gray-100' : ''}
+             `}>
               {item.content}
             </div>
           )}
-
-          {/* 자식 요소 재귀 렌더링 */}
-          {hasChildren && (
-            <div className="flex flex-col">
-              {item.children!.map((child, idx) => (
-                <RecursiveGuideCard 
-                  key={idx} 
-                  item={child} 
-                  depth={depth + 1} 
-                />
-              ))}
-            </div>
-          )}
         </div>
-      </div>
+      </button>
+
+      {/* 자식 항목 렌더링 영역 */}
+      {isOpen && hasChildren && (
+        <div className={`
+          ${depth === 0 ? 'border-t border-gray-100 p-4 pt-2 bg-white' : 'border-l-2 border-gray-100 ml-3.5 pl-3'}
+        `}>
+          {item.children!.map((child, idx) => (
+            <RecursiveGuideCard 
+              key={idx} 
+              item={child} 
+              depth={depth + 1} 
+            />
+          ))}
+        </div>
+      )}
     </div>
   );
 }
