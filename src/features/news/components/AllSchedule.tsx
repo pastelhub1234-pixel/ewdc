@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { ChevronLeft, ChevronRight, Calendar as CalendarIcon, Clock, MapPin, Info } from 'lucide-react';
 import { useJsonData } from '../../../hooks/useJsonData';
-
+ 
 interface ScheduleItem {
   id: string;
   date: string;
