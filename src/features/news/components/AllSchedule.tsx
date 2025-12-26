@@ -85,35 +85,41 @@ export function AllSchedule() {
 
   return (
     <div className="w-full h-full p-6 overflow-x-auto">
-      {/* [전체 레이아웃 컨테이너]
-        - min-w-[1400px]: 화면이 작아도 레이아웃 깨짐 방지 (전체 가로 스크롤 생성)
-        - h-[720px]: 세 카드의 높이를 강제 통일
-        - gap-6: 카드 간 간격
+      {/* 스크롤바 숨김 스타일 주입 */}
+      <style>{`
+        .scrollbar-hide::-webkit-scrollbar {
+            display: none;
+        }
+        .scrollbar-hide {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+      `}</style>
+
+      {/* [전체 레이아웃] 
+        min-w-[1200px]: 화면이 작아지면 전체 가로 스크롤 생성 (레이아웃 찌그러짐 방지)
+        h-[720px]: 높이 고정 (3개 패널 높이 통일)
       */}
-      <div className="min-w-[1400px] h-[720px] flex gap-6">
+      <div className="min-w-[1200px] h-[720px] flex gap-6">
         
         {/* =======================================================
-            1. [Left] Upcoming List (비율 1/4)
-            - basis-1/4: 정확히 25% 너비 차지
-            - min-w-0: 내부 콘텐츠가 비율을 깨고 늘어나는 것 방지 (중요!)
+            1. [Left] Upcoming List (비율 1/4 = 25%)
+            - basis-1/4: 너비 25% 강제
+            - min-w-0: 내부 콘텐츠가 비율을 깨고 늘어나는 것 방지 (핵심)
             - flex-col & h-full: 높이 꽉 채움
            ======================================================= */}
         <div className="basis-1/4 min-w-0 bg-white/70 backdrop-blur-xl rounded-[32px] p-6 shadow-sm border border-white/60 flex flex-col h-full overflow-hidden">
-          <div className="flex items-center gap-2 mb-6 pl-1 flex-shrink-0">
+          <div className="flex items-center gap-2 mb-4 pl-1 flex-shrink-0">
             <Clock className="w-5 h-5 text-purple-500" />
             <h4 className="text-gray-800 font-bold text-lg">Upcoming</h4>
           </div>
           
-          {/* [스크롤 영역]
-             - flex-1: 남은 세로 공간 모두 차지
-             - overflow-y-auto: 세로 스크롤 활성화
-             - no-scrollbar: 스크롤바 숨김 (커스텀 클래스 또는 인라인 스타일)
+          {/* [스크롤 영역] 
+             - flex-1: 남은 공간 차지
+             - overflow-y-auto: 세로 스크롤만 허용
+             - scrollbar-hide: 스크롤바 안 보이게
           */}
-          <div className="flex-1 overflow-y-auto space-y-3 pr-1" style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}>
-            <style>{`
-              div::-webkit-scrollbar { display: none; }
-            `}</style>
-            
+          <div className="flex-1 overflow-y-auto space-y-3 scrollbar-hide pr-1">
             {schedules?.map((event) => (
               <button
                 key={event.id}
@@ -136,7 +142,7 @@ export function AllSchedule() {
                   {getEventIcon(event.type)}
                 </div>
                 
-                {/* min-w-0: 텍스트가 길어도 부모 밖으로 나가지 않게 함 */}
+                {/* min-w-0 & truncate: 텍스트가 길어도 무조건 말줄임표 처리 (가로 스크롤 방지) */}
                 <div className="min-w-0 flex-1">
                   <p className={`text-sm font-bold truncate ${selectedEvent?.id === event.id ? 'text-purple-700' : 'text-gray-700'}`}>
                     {event.title}
@@ -152,7 +158,7 @@ export function AllSchedule() {
 
         {/* =======================================================
             2. [Center] Calendar (비율 2/4 = 50%)
-            - basis-2/4: 정확히 50% 너비 차지
+            - basis-2/4: 너비 50% 강제
             - min-w-0: 레이아웃 보호
            ======================================================= */}
         <div className="basis-2/4 min-w-0 bg-white/70 backdrop-blur-xl rounded-[32px] p-8 shadow-sm border border-purple-50 flex flex-col h-full overflow-hidden">
@@ -182,7 +188,7 @@ export function AllSchedule() {
           </div>
 
           {/* Days Grid */}
-          <div className="grid grid-cols-7 gap-4 flex-1 content-start px-2 overflow-y-auto" style={{ scrollbarWidth: 'none' }}>
+          <div className="grid grid-cols-7 gap-4 flex-1 content-start px-2 overflow-y-auto scrollbar-hide">
             {Array.from({ length: startingDayOfWeek }).map((_, i) => <div key={`empty-${i}`} />)}
             {Array.from({ length: daysInMonth }).map((_, i) => {
               const day = i + 1;
@@ -213,12 +219,12 @@ export function AllSchedule() {
 
         {/* =======================================================
             3. [Right] Details (비율 1/4 = 25%)
-            - basis-1/4: 정확히 25% 너비 차지
+            - basis-1/4: 너비 25% 강제
             - min-w-0: 레이아웃 보호
            ======================================================= */}
         <div className="basis-1/4 min-w-0 bg-white/70 backdrop-blur-xl rounded-[32px] p-8 shadow-sm border border-white/60 flex flex-col justify-center text-center h-full relative overflow-hidden">
           {selectedEvent ? (
-            <div className="animate-in fade-in zoom-in duration-300 h-full flex flex-col items-center justify-center">
+            <div className="animate-in fade-in zoom-in duration-300 h-full flex flex-col items-center justify-center w-full">
                <div className="w-32 h-32 mx-auto bg-white rounded-[2.5rem] shadow-sm flex items-center justify-center text-7xl mb-8 border border-purple-50">
                 {getEventIcon(selectedEvent.type)}
               </div>
@@ -227,11 +233,12 @@ export function AllSchedule() {
                 {selectedEvent.type}
               </div>
 
-              <h2 className="text-3xl font-bold text-gray-800 mb-5 leading-tight break-keep px-4 truncate w-full">
+              {/* w-full & truncate: 텍스트가 너무 길면 말줄임 */}
+              <h2 className="text-3xl font-bold text-gray-800 mb-5 leading-tight px-4 w-full truncate">
                 {selectedEvent.title}
               </h2>
               
-              <p className="text-base text-gray-500 mb-12 leading-relaxed px-4 line-clamp-4">
+              <p className="text-base text-gray-500 mb-12 leading-relaxed px-4 line-clamp-4 w-full">
                 {selectedEvent.description}
               </p>
 
