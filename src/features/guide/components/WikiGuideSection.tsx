@@ -1,9 +1,8 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import { useParams } from 'react-router-dom';
 import { List, AlignLeft } from 'lucide-react';
 import { useJsonData } from '../../../hooks/useJsonData';
-// ✅ 분리된 재귀 컴포넌트 import
-import { RecursiveGuideCard, GuideItem } from './RecursiveGuideCard';
+import { RecursiveGuideCard, GuideItem } from './RecursiveGuideCard'; // 경로에 맞게 수정하세요
 
 interface GuideGroup {
   id: string;
@@ -13,11 +12,14 @@ interface GuideGroup {
 
 export function WikiGuideSection() {
   const { slug } = useParams();
-  const { data: allGuides, loading } = useJsonData<GuideGroup[]>('guides');
+  // hooks 경로는 실제 프로젝트 구조에 맞게 확인해주세요
+  const { data: allGuides, loading } = useJsonData<GuideGroup[]>('guides'); 
   const [targetGuide, setTargetGuide] = useState<GuideGroup | null>(null);
   const [activeSection, setActiveSection] = useState<number>(0);
+  
+  // 섹션 위치 참조용
+  const sectionRefs = useRef<(HTMLDivElement | null)[]>([]);
 
-  // 데이터 로드
   useEffect(() => {
     if (allGuides && slug) {
       const found = allGuides.find(g => g.id === slug);
@@ -25,80 +27,129 @@ export function WikiGuideSection() {
     }
   }, [allGuides, slug]);
 
-  // 스크롤 이동 함수
+  // 스크롤 감지 (Intersection Observer)
+  useEffect(() => {
+    if (!targetGuide) return;
+    
+    // GuidePage.tsx에 id="guide-scroll-container"가 선언되어 있어야 합니다.
+    const scrollContainer = document.getElementById('guide-scroll-container');
+    if (!scrollContainer) return;
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            const index = Number(entry.target.getAttribute('data-index'));
+            setActiveSection(index);
+          }
+        });
+      },
+      {
+        root: scrollContainer,
+        rootMargin: '-20% 0px -60% 0px', // 화면 중앙 쯤에 오면 활성화
+        threshold: 0
+      }
+    );
+
+    sectionRefs.current.forEach((ref) => {
+      if (ref) observer.observe(ref);
+    });
+
+    return () => observer.disconnect();
+  }, [targetGuide]);
+
   const scrollToSection = (index: number) => {
-    const element = document.getElementById(`section-${index}`);
-    if (element) {
-      // 헤더 높이 등을 고려한 스크롤 보정
-      element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    const container = document.getElementById('guide-scroll-container');
+    const element = sectionRefs.current[index];
+    
+    if (container && element) {
+      const topPos = element.offsetTop - 24; // 상단 여백 보정
+      container.scrollTo({
+        top: topPos,
+        behavior: "smooth"
+      });
       setActiveSection(index);
     }
   };
 
-  if (loading) return <div className="p-10 text-center text-gray-500">가이드 로딩 중...</div>;
-  if (!targetGuide) return <div className="text-center text-gray-400 py-10">내용을 찾을 수 없습니다.</div>;
+  if (loading) return <div className="p-20 text-center text-gray-500">가이드 로딩 중...</div>;
+  if (!targetGuide) return <div className="p-20 text-center text-gray-400">해당 가이드를 찾을 수 없습니다.</div>;
 
   return (
-    <div className="max-w-[1200px] mx-auto px-6 py-8 pb-32">
-      {/* 1. 헤더 영역 (아이콘 + 제목) */}
-      <div className="flex items-center gap-3 mb-10 border-b border-purple-100 pb-5">
-        <div className="p-3 bg-purple-100 rounded-2xl text-purple-600 shadow-sm">
+    <div className="max-w-7xl mx-auto px-4 md:px-8 py-10 pb-32">
+      {/* 헤더 영역 */}
+      <div className="flex items-center gap-4 mb-10 pb-6 border-b border-indigo-50">
+        <div className="p-3 bg-indigo-100 rounded-2xl text-indigo-600 shadow-sm">
            <AlignLeft className="w-7 h-7"/>
         </div>
-        <h2 className="text-3xl font-bold text-gray-900">{targetGuide.title}</h2>
+        <h2 className="text-3xl font-bold text-gray-900 tracking-tight">{targetGuide.title}</h2>
       </div>
 
-      {/* 2. 메인 컨텐츠 + 목차 레이아웃 (Flex 사용) */}
-      <div className="flex flex-col lg:flex-row gap-10 items-start">
+      {/* Grid 레이아웃: [본문 1fr] - [목차 300px] */}
+      <div className="grid grid-cols-1 lg:grid-cols-[1fr_300px] gap-8 items-start relative">
         
-        {/* [왼쪽] 본문 영역 (RecursiveGuideCard 사용) */}
-        <div className="flex-1 min-w-0 w-full bg-white rounded-[24px] p-8 shadow-sm border border-slate-100">
+        {/* [왼쪽] 본문 영역 */}
+        <div className="min-w-0 space-y-8">
           {targetGuide.items && targetGuide.items.length > 0 ? (
             targetGuide.items.map((item, idx) => (
               <div 
                 key={idx} 
-                id={`section-${idx}`} 
-                // scroll-mt-24: 상단 헤더에 가려지지 않도록 여백 확보
-                className="scroll-mt-24 mb-10 last:mb-0 border-b border-slate-100 pb-10 last:border-0 last:pb-0" 
+                data-index={idx}
+                ref={el => sectionRefs.current[idx] = el}
+                className="scroll-mt-6"
               >
-                {/* ✅ 재귀 컴포넌트 호출 */}
+                {/* 여기서 RecursiveGuideCard 사용 */}
                 <RecursiveGuideCard item={item} depth={0} />
               </div>
             ))
           ) : (
-            <div className="text-gray-400 text-center py-20">작성된 가이드가 없습니다.</div>
+            <div className="text-gray-400 py-10 text-center bg-white rounded-2xl border border-dashed border-gray-200">
+              내용이 없습니다.
+            </div>
           )}
         </div>
 
         {/* [오른쪽] 목차 영역 (Sticky) */}
-        <aside className="sticky top-8 w-full lg:w-[280px] flex-shrink-0">
-          <div className="bg-white/80 backdrop-blur-xl rounded-2xl p-6 shadow-[0_4px_20px_rgba(0,0,0,0.05)] border border-purple-100/60">
-            <h3 className="text-gray-800 font-bold mb-4 flex items-center gap-2 border-b border-gray-100 pb-3 text-sm uppercase tracking-wide">
-               <List className="w-4 h-4 text-purple-500"/> 
-               <span>Contents</span>
+        {/* lg 사이즈 이상에서만 보임, sticky position 적용 */}
+        <aside className="hidden lg:block sticky top-6">
+          <div className="bg-white rounded-2xl p-6 shadow-[0_4px_20px_rgba(0,0,0,0.03)] border border-gray-100">
+            <h3 className="text-gray-800 font-bold mb-4 flex items-center gap-2 pb-3 border-b border-gray-50">
+               <List className="w-5 h-5 text-indigo-500"/> 
+               <span className="text-base">목차</span>
             </h3>
             
-            <div className="flex flex-col gap-1">
-              {targetGuide.items?.map((item, idx) => {
+            <div className="space-y-1 max-h-[70vh] overflow-y-auto pr-2 custom-scrollbar">
+              {targetGuide.items.map((item, idx) => {
                 const isActive = activeSection === idx;
                 return (
                   <button
                     key={idx}
                     onClick={() => scrollToSection(idx)}
                     className={`
-                      text-left px-3 py-2 rounded-lg text-sm transition-all duration-200 truncate
+                      relative flex items-center w-full text-left px-4 py-3 rounded-xl transition-all duration-200 text-sm font-medium
                       ${isActive 
-                        ? 'bg-purple-50 text-purple-700 font-bold' 
+                        ? 'bg-indigo-50 text-indigo-700 shadow-sm' 
                         : 'text-gray-500 hover:bg-gray-50 hover:text-gray-900'
                       }
                     `}
                   >
-                    <span className="mr-2 text-xs opacity-60">{idx + 1}.</span>
-                    {item.label}
+                    {/* 활성 상태 인디케이터 (점) */}
+                    {isActive && (
+                      <div className="absolute left-2 w-1.5 h-1.5 bg-indigo-500 rounded-full" />
+                    )}
+                    <span className={`truncate ${isActive ? 'pl-2' : ''} transition-all`}>
+                      {item.label}
+                    </span>
                   </button>
                 );
               })}
             </div>
+          </div>
+          
+          {/* 하단 팁이나 부가 정보 (이미지처럼 빈 공간 채우기 용) */}
+          <div className="mt-4 p-4 rounded-xl bg-gray-50 text-xs text-gray-400 leading-relaxed">
+            Windows 정품 인증<br/>
+            [설정]으로 이동하여 Windows를 정품 인증합니다.
           </div>
         </aside>
 
