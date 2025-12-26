@@ -21,7 +21,7 @@ interface StreamingData {
   guides?: Guide[];
 }
 
-export function StreamingSection() {
+export function MusicStreaming() {
   // 데이터 불러오기
   const { data, loading, error } = useJsonData<StreamingData>('streaming');
   const [currentGuideIdx, setCurrentGuideIdx] = useState(0);
