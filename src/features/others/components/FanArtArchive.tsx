@@ -64,7 +64,9 @@ export function FanArtArchive() {
                 {/* 이미지: 클릭 시 다음 페이지 */}
                 <div
                   onClick={nextPage}
-                  className="cursor-pointer relative w-full flex-1 rounded-xl overflow-hidden shadow-lg hover:scale-[1.02] transition-transform duration-300 bg-gray-100"
+                  // aspect-square 클래스를 추가하여 1:1 비율을 고정했습니다.
+                  // flex-1은 제거하여 비율이 깨지지 않도록 했습니다.
+                  className="cursor-pointer relative w-full aspect-square rounded-xl overflow-hidden shadow-lg hover:scale-[1.02] transition-transform duration-300 bg-gray-100"
                 >
                   <img
                     src={item.url}
@@ -74,7 +76,7 @@ export function FanArtArchive() {
                 </div>
 
                 {/* 정보 영역 */}
-                <div className="mt-2 space-y-1">
+                <div className="mt-3 space-y-1">
                   <div className="font-semibold text-sm truncate">
                     {item.title}
                   </div>
