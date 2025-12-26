@@ -2,7 +2,7 @@ import { useEffect, useState, useRef } from 'react';
 import { useParams } from 'react-router-dom';
 import { List, AlignLeft } from 'lucide-react';
 import { useJsonData } from '../../../hooks/useJsonData';
-import { RecursiveGuideCard, GuideItem } from './RecursiveGuideCard'; // 경로에 맞게 수정하세요
+import { RecursiveGuideCard, GuideItem } from './RecursiveGuideCard'; 
 
 interface GuideGroup {
   id: string;
@@ -12,12 +12,10 @@ interface GuideGroup {
 
 export function WikiGuideSection() {
   const { slug } = useParams();
-  // hooks 경로는 실제 프로젝트 구조에 맞게 확인해주세요
   const { data: allGuides, loading } = useJsonData<GuideGroup[]>('guides'); 
   const [targetGuide, setTargetGuide] = useState<GuideGroup | null>(null);
   const [activeSection, setActiveSection] = useState<number>(0);
   
-  // 섹션 위치 참조용
   const sectionRefs = useRef<(HTMLDivElement | null)[]>([]);
 
   useEffect(() => {
@@ -27,11 +25,10 @@ export function WikiGuideSection() {
     }
   }, [allGuides, slug]);
 
-  // 스크롤 감지 (Intersection Observer)
+  // 스크롤 감지 (Spy)
   useEffect(() => {
     if (!targetGuide) return;
     
-    // GuidePage.tsx에 id="guide-scroll-container"가 선언되어 있어야 합니다.
     const scrollContainer = document.getElementById('guide-scroll-container');
     if (!scrollContainer) return;
 
@@ -46,7 +43,7 @@ export function WikiGuideSection() {
       },
       {
         root: scrollContainer,
-        rootMargin: '-20% 0px -60% 0px', // 화면 중앙 쯤에 오면 활성화
+        rootMargin: '-20% 0px -60% 0px',
         threshold: 0
       }
     );
@@ -63,7 +60,7 @@ export function WikiGuideSection() {
     const element = sectionRefs.current[index];
     
     if (container && element) {
-      const topPos = element.offsetTop - 24; // 상단 여백 보정
+      const topPos = element.offsetTop - 24; 
       container.scrollTo({
         top: topPos,
         behavior: "smooth"
@@ -76,20 +73,23 @@ export function WikiGuideSection() {
   if (!targetGuide) return <div className="p-20 text-center text-gray-400">해당 가이드를 찾을 수 없습니다.</div>;
 
   return (
-    <div className="max-w-7xl mx-auto px-4 md:px-8 py-10 pb-32">
-      {/* 헤더 영역 */}
-      <div className="flex items-center gap-4 mb-10 pb-6 border-b border-indigo-50">
-        <div className="p-3 bg-indigo-100 rounded-2xl text-indigo-600 shadow-sm">
-           <AlignLeft className="w-7 h-7"/>
+    <div className="max-w-7xl mx-auto px-4 md:px-6 py-8 pb-32">
+      {/* 헤더 */}
+      <div className="flex items-center gap-3 mb-8 pb-4 border-b border-indigo-50">
+        <div className="p-2.5 bg-indigo-100 rounded-xl text-indigo-600 shadow-sm">
+           <AlignLeft className="w-6 h-6"/>
         </div>
-        <h2 className="text-3xl font-bold text-gray-900 tracking-tight">{targetGuide.title}</h2>
+        <h2 className="text-2xl md:text-3xl font-bold text-gray-900 tracking-tight">{targetGuide.title}</h2>
       </div>
 
-      {/* Grid 레이아웃: [본문 1fr] - [목차 300px] */}
-      <div className="grid grid-cols-1 lg:grid-cols-[1fr_300px] gap-8 items-start relative">
+      {/* ✅ [수정] Grid 설정 변경 
+         - md(768px) 이상부터 2단 레이아웃 적용 (기존 lg -> md)
+         - gap을 조금 줄여서(8->6) 좁은 화면에서도 사이드바 공간 확보
+      */}
+      <div className="grid grid-cols-1 md:grid-cols-[1fr_260px] lg:grid-cols-[1fr_300px] gap-6 items-start relative">
         
         {/* [왼쪽] 본문 영역 */}
-        <div className="min-w-0 space-y-8">
+        <div className="min-w-0 space-y-6">
           {targetGuide.items && targetGuide.items.length > 0 ? (
             targetGuide.items.map((item, idx) => (
               <div 
@@ -98,7 +98,6 @@ export function WikiGuideSection() {
                 ref={el => sectionRefs.current[idx] = el}
                 className="scroll-mt-6"
               >
-                {/* 여기서 RecursiveGuideCard 사용 */}
                 <RecursiveGuideCard item={item} depth={0} />
               </div>
             ))
@@ -109,16 +108,17 @@ export function WikiGuideSection() {
           )}
         </div>
 
-        {/* [오른쪽] 목차 영역 (Sticky) */}
-        {/* lg 사이즈 이상에서만 보임, sticky position 적용 */}
-        <aside className="hidden lg:block sticky top-6">
-          <div className="bg-white rounded-2xl p-6 shadow-[0_4px_20px_rgba(0,0,0,0.03)] border border-gray-100">
-            <h3 className="text-gray-800 font-bold mb-4 flex items-center gap-2 pb-3 border-b border-gray-50">
-               <List className="w-5 h-5 text-indigo-500"/> 
-               <span className="text-base">목차</span>
+        {/* [오른쪽] 목차 영역 (Sticky) 
+          ✅ [수정] hidden lg:block -> hidden md:block 으로 변경하여 태블릿 사이즈부터 보이게 함
+        */}
+        <aside className="hidden md:block sticky top-6">
+          <div className="bg-white rounded-2xl p-5 shadow-[0_4px_20px_rgba(0,0,0,0.03)] border border-gray-100">
+            <h3 className="text-gray-800 font-bold mb-3 flex items-center gap-2 pb-2 border-b border-gray-50 text-sm">
+               <List className="w-4 h-4 text-indigo-500"/> 
+               <span>목차</span>
             </h3>
             
-            <div className="space-y-1 max-h-[70vh] overflow-y-auto pr-2 custom-scrollbar">
+            <div className="space-y-1 max-h-[70vh] overflow-y-auto pr-1 custom-scrollbar">
               {targetGuide.items.map((item, idx) => {
                 const isActive = activeSection === idx;
                 return (
@@ -126,16 +126,15 @@ export function WikiGuideSection() {
                     key={idx}
                     onClick={() => scrollToSection(idx)}
                     className={`
-                      relative flex items-center w-full text-left px-4 py-3 rounded-xl transition-all duration-200 text-sm font-medium
+                      relative flex items-center w-full text-left px-3 py-2.5 rounded-lg transition-all duration-200 text-sm font-medium
                       ${isActive 
                         ? 'bg-indigo-50 text-indigo-700 shadow-sm' 
                         : 'text-gray-500 hover:bg-gray-50 hover:text-gray-900'
                       }
                     `}
                   >
-                    {/* 활성 상태 인디케이터 (점) */}
                     {isActive && (
-                      <div className="absolute left-2 w-1.5 h-1.5 bg-indigo-500 rounded-full" />
+                      <div className="absolute left-1.5 w-1 h-4 bg-indigo-500 rounded-full" />
                     )}
                     <span className={`truncate ${isActive ? 'pl-2' : ''} transition-all`}>
                       {item.label}
@@ -144,12 +143,6 @@ export function WikiGuideSection() {
                 );
               })}
             </div>
-          </div>
-          
-          {/* 하단 팁이나 부가 정보 (이미지처럼 빈 공간 채우기 용) */}
-          <div className="mt-4 p-4 rounded-xl bg-gray-50 text-xs text-gray-400 leading-relaxed">
-            Windows 정품 인증<br/>
-            [설정]으로 이동하여 Windows를 정품 인증합니다.
           </div>
         </aside>
 
