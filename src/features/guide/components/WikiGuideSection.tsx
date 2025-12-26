@@ -2,7 +2,7 @@ import { useEffect, useState, useRef } from 'react';
 import { useParams } from 'react-router-dom';
 import { List, AlignLeft } from 'lucide-react';
 import { useJsonData } from '../../../hooks/useJsonData';
-import { RecursiveGuideCard, GuideItem } from './RecursiveGuideCard'; 
+import { RecursiveGuideCard, GuideItem } from './RecursiveGuideCard';
 
 interface GuideGroup {
   id: string;
@@ -12,7 +12,7 @@ interface GuideGroup {
 
 export function WikiGuideSection() {
   const { slug } = useParams();
-  const { data: allGuides, loading } = useJsonData<GuideGroup[]>('guides'); 
+  const { data: allGuides, loading } = useJsonData<GuideGroup[]>('guides');
   const [targetGuide, setTargetGuide] = useState<GuideGroup | null>(null);
   const [activeSection, setActiveSection] = useState<number>(0);
   
@@ -60,7 +60,7 @@ export function WikiGuideSection() {
     const element = sectionRefs.current[index];
     
     if (container && element) {
-      const topPos = element.offsetTop - 24; 
+      const topPos = element.offsetTop - 24;
       container.scrollTo({
         top: topPos,
         behavior: "smooth"
@@ -82,14 +82,15 @@ export function WikiGuideSection() {
         <h2 className="text-2xl md:text-3xl font-bold text-gray-900 tracking-tight">{targetGuide.title}</h2>
       </div>
 
-      {/* ✅ [수정] Grid 설정 변경 
-         - md(768px) 이상부터 2단 레이아웃 적용 (기존 lg -> md)
-         - gap을 조금 줄여서(8->6) 좁은 화면에서도 사이드바 공간 확보
+      {/* ✅ [레이아웃 수정] Grid 대신 Flex 사용 
+         - lg(1024px) 이상: 가로 배치 (본문 - 목차)
+         - 그 이하: 세로 배치 (본문 - 목차는 아래로 내려감)
+         - 목차를 'hidden' 시키지 않으므로 무조건 화면 어딘가에는 보입니다.
       */}
-      <div className="grid grid-cols-1 md:grid-cols-[1fr_260px] lg:grid-cols-[1fr_300px] gap-6 items-start relative">
+      <div className="flex flex-col lg:flex-row gap-8 relative items-start">
         
-        {/* [왼쪽] 본문 영역 */}
-        <div className="min-w-0 space-y-6">
+        {/* [왼쪽] 본문 영역 (flex-1로 남은 공간 모두 차지) */}
+        <div className="flex-1 min-w-0 w-full space-y-6">
           {targetGuide.items && targetGuide.items.length > 0 ? (
             targetGuide.items.map((item, idx) => (
               <div 
@@ -109,9 +110,10 @@ export function WikiGuideSection() {
         </div>
 
         {/* [오른쪽] 목차 영역 (Sticky) 
-          ✅ [수정] hidden lg:block -> hidden md:block 으로 변경하여 태블릿 사이즈부터 보이게 함
+           - w-full lg:w-[280px]: 데스크탑에선 280px 고정, 모바일에선 꽉 참
+           - sticky top-6 self-start: 스크롤 따라오기 구현
         */}
-        <aside className="hidden md:block sticky top-6">
+        <aside className="w-full lg:w-[280px] shrink-0 sticky top-6 self-start z-10">
           <div className="bg-white rounded-2xl p-5 shadow-[0_4px_20px_rgba(0,0,0,0.03)] border border-gray-100">
             <h3 className="text-gray-800 font-bold mb-3 flex items-center gap-2 pb-2 border-b border-gray-50 text-sm">
                <List className="w-4 h-4 text-indigo-500"/> 
@@ -143,6 +145,11 @@ export function WikiGuideSection() {
                 );
               })}
             </div>
+          </div>
+          
+          {/* 하단 여백 채우기용 더미 (선택사항) */}
+          <div className="hidden lg:block mt-4 text-xs text-gray-300 text-center">
+            가이드 바로가기
           </div>
         </aside>
 
