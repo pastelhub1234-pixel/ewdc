@@ -85,27 +85,29 @@ export function AllSchedule() {
 
   return (
     <div className="w-full h-full p-6 overflow-x-auto">
-      {/* [통합 카드 컨테이너] 
-        - min-w-[1400px]: 내부 비율(1:2:1) 유지
-        - h-[750px]: 달력 정사각형 비율에 맞춘 고정 높이
-        - 하나의 큰 박스 안에 divide-x로 구역을 나눔
+      {/* [전체 레이아웃 컨테이너]
+        - min-w-[1400px]: 화면이 작아도 1400px 비율 유지 (가로 스크롤 생성)
+        - h-[720px]: 세 카드의 높이를 720px로 강제 통일 (균형 맞춤)
+        - gap-6: 카드 사이 간격
       */}
-      <div className="min-w-[1400px] h-[750px] bg-white/70 backdrop-blur-xl rounded-[32px] shadow-sm border border-white/60 flex flex-row divide-x divide-purple-50/50">
+      <div className="min-w-[1400px] h-[720px] flex gap-6">
         
         {/* =======================================================
-            1. [Left] Upcoming List (Flex: 1)
-            - overflow-hidden: 부모 영역 넘침 방지
+            1. [Left] Upcoming List 
+            - flex-1: 1 비율 (약 25%)
+            - h-full: 부모 높이(720px) 꽉 채움
+            - overflow-hidden: 둥근 모서리 유지
            ======================================================= */}
-        <div className="flex-1 flex flex-col h-full overflow-hidden p-6">
+        <div className="flex-1 bg-white/70 backdrop-blur-xl rounded-[32px] p-6 shadow-sm border border-white/60 flex flex-col h-full overflow-hidden">
           <div className="flex items-center gap-2 mb-6 pl-1 flex-shrink-0">
             <Clock className="w-5 h-5 text-purple-500" />
             <h4 className="text-gray-800 font-bold text-lg">Upcoming</h4>
           </div>
           
-          {/* [스크롤 영역] 
-            - flex-1: 남은 공간 채움
-            - overflow-y-auto: 세로 스크롤
-            - [&::-webkit-scrollbar]:hidden: 스크롤바 숨김 (Tailwind 임의설정)
+          {/* [스크롤 영역 수정]
+             - flex-col: 세로 배치
+             - overflow-y-auto: 세로 스크롤 활성화
+             - [&::-webkit-scrollbar]:hidden: 스크롤바 숨김
           */}
           <div className="flex-1 overflow-y-auto space-y-3 [&::-webkit-scrollbar]:hidden">
             {schedules?.map((event) => (
@@ -144,10 +146,11 @@ export function AllSchedule() {
         </div>
 
         {/* =======================================================
-            2. [Center] Calendar (Flex: 2)
-            - 가장 넓은 영역 차지
+            2. [Center] Calendar
+            - flex-[2]: 2 비율 (약 50%) -> 좌우보다 2배 넓음
+            - h-full: 높이 통일
            ======================================================= */}
-        <div className="flex-[2] flex flex-col h-full p-8">
+        <div className="flex-[2] bg-white/70 backdrop-blur-xl rounded-[32px] p-8 shadow-sm border border-purple-50 flex flex-col h-full overflow-hidden">
           {/* Header */}
           <div className="flex items-center justify-between mb-8 flex-shrink-0">
             <h3 className="text-gray-800 font-bold flex items-center gap-3 text-3xl tracking-tight ml-2">
@@ -204,10 +207,11 @@ export function AllSchedule() {
         </div>
 
         {/* =======================================================
-            3. [Right] Details (Flex: 1)
-            - justify-center: 내용은 중앙 정렬
+            3. [Right] Details
+            - flex-1: 1 비율 (약 25%)
+            - h-full: 높이 통일 (이전보다 길어져서 균형 맞음)
            ======================================================= */}
-        <div className="flex-1 flex flex-col justify-center h-full p-8 relative overflow-hidden">
+        <div className="flex-1 bg-white/70 backdrop-blur-xl rounded-[32px] p-8 shadow-sm border border-white/60 flex flex-col justify-center text-center h-full relative overflow-hidden">
           {selectedEvent ? (
             <div className="animate-in fade-in zoom-in duration-300 h-full flex flex-col items-center justify-center">
                <div className="w-32 h-32 mx-auto bg-white rounded-[2.5rem] shadow-sm flex items-center justify-center text-7xl mb-8 border border-purple-50">
@@ -218,11 +222,11 @@ export function AllSchedule() {
                 {selectedEvent.type}
               </div>
 
-              <h2 className="text-3xl font-bold text-gray-800 mb-5 leading-tight break-keep px-4 text-center">
+              <h2 className="text-3xl font-bold text-gray-800 mb-5 leading-tight break-keep px-4">
                 {selectedEvent.title}
               </h2>
               
-              <p className="text-base text-gray-500 mb-12 leading-relaxed px-4 line-clamp-4 text-center">
+              <p className="text-base text-gray-500 mb-12 leading-relaxed px-4 line-clamp-4">
                 {selectedEvent.description}
               </p>
 
