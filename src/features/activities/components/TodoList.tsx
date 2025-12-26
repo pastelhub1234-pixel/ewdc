@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { CheckSquare, ExternalLink, Circle, CheckCircle2, MessageCircle, PlayCircle, Star, Heart } from 'lucide-react';
 import { useJsonData } from '../../../hooks/useJsonData';
 
+// 1. 데이터 타입 정의 (새로운 JSON 구조에 맞춤)
 interface TodoItem {
   id: string;
   task: string;
@@ -30,25 +31,30 @@ interface LocalTodo extends TodoItem {
 }
 
 export function TodoDashboard() {
+  // 2. 전체 데이터 객체 가져오기
   const { data: serverData, loading, error } = useJsonData<TodoData>('todo');
   const [todos, setTodos] = useState<LocalTodo[]>([]);
 
+  // 3. 데이터 로드 시 dailyMissions를 로컬 상태로 초기화
   useEffect(() => {
     if (serverData?.dailyMissions) {
       setTodos(serverData.dailyMissions.map(t => ({ ...t, completed: false })));
     }
   }, [serverData]);
 
+  // 투두 토글 핸들러
   const toggleTodo = (id: string) => {
     setTodos(todos.map((todo) => (todo.id === id ? { ...todo, completed: !todo.completed } : todo)));
   };
 
+  // 진척도 계산
   const completedCount = todos.filter((t) => t.completed).length;
   const progressPercent = todos.length > 0 ? Math.round((completedCount / todos.length) * 100) : 0;
   
-  // 진척도에 따른 블러 강도 계산
+  // 블러 강도 계산 (0%일 때 20px -> 100%일 때 0px)
   const blurValue = Math.max(0, 20 - (progressPercent / 5));
 
+  // 퀵 액션 아이콘 매핑
   const getIcon = (type: string) => {
     switch (type) {
       case 'message': return <MessageCircle className="w-4 h-4" />;
@@ -59,15 +65,15 @@ export function TodoDashboard() {
     }
   };
 
-  if (loading) return <div className="p-10 text-center">로딩 중...</div>;
-  if (error || !serverData) return null;
+  if (loading) return <div className="p-10 text-center text-gray-500">로딩 중...</div>;
+  if (error || !serverData) return <div className="p-10 text-center text-red-400">데이터를 불러올 수 없습니다.</div>;
 
   return (
     <div className="flex flex-col lg:flex-row gap-6 min-h-[600px]">
       
       {/* [왼쪽 영역] 메인 할 일 리스트 (60%) */}
       <div className="lg:w-3/5 bg-white/70 backdrop-blur-md rounded-[32px] p-7 shadow-xl border border-purple-100/50 flex flex-col text-left">
-        <div className="flex items-center justify-between mb-8 px-2 text-left">
+        <div className="flex items-center justify-between mb-8 px-2">
           <div className="flex items-center gap-3">
             <div className="p-2.5 bg-purple-100 rounded-xl">
               <CheckSquare className="w-6 h-6 text-purple-600" />
@@ -128,10 +134,8 @@ export function TodoDashboard() {
       {/* [오른쪽 영역] 진척도 & 보상 & 퀵 버튼 (40%) */}
       <div className="lg:w-2/5 flex flex-col gap-6 font-sans">
         
-        {/* 1. 진척도 바 차트 (직선형으로 변경됨) */}
+        {/* 1. 직선형 진척도 바 */}
         <div className="bg-white/80 backdrop-blur-sm rounded-[32px] p-8 border border-purple-100/50 shadow-lg flex flex-col justify-center">
-          
-          {/* 텍스트 정보 */}
           <div className="flex justify-between items-end mb-4">
             <div>
               <span className="text-4xl font-black text-gray-800 tracking-tight">{progressPercent}%</span>
@@ -143,10 +147,7 @@ export function TodoDashboard() {
                </span>
             </div>
           </div>
-
-          {/* 프로그레스 바 트랙 */}
           <div className="w-full h-5 bg-gray-100 rounded-full overflow-hidden shadow-inner">
-            {/* 채워지는 바 (Gradient & Animation) */}
             <div 
               className="h-full bg-gradient-to-r from-purple-500 to-pink-500 rounded-full transition-all duration-1000 ease-out shadow-[0_0_15px_rgba(168,85,247,0.5)]"
               style={{ width: `${progressPercent}%` }}
@@ -154,7 +155,47 @@ export function TodoDashboard() {
           </div>
         </div>
 
-        {/* 2. 보상 이미지 (JSON 데이터 기반) */}
+        {/* 2. 보상 이미지 (JSON 데이터 연동) */}
         <div className="relative aspect-[4/3] rounded-[32px] overflow-hidden border border-purple-100/50 shadow-lg bg-gray-100 group">
           <img 
-            src={server
+            src={serverData.rewardImage.url} 
+            alt="Reward"
+            style={{ filter: `blur(${blurValue}px)` }}
+            className="w-full h-full object-cover transition-all duration-700"
+          />
+          <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent flex flex-col justify-end p-6 text-left">
+            <p className="text-white font-bold text-lg drop-shadow-md">
+              {progressPercent === 100 ? serverData.rewardImage.unlockedMessage : "🔒 미션을 완료하여 해제하세요"}
+            </p>
+            <p className="text-white/70 text-xs mt-1">{serverData.rewardImage.caption}</p>
+          </div>
+        </div>
+
+        {/* 3. 퀵 액션 버튼 리스트 (JSON 데이터 연동) */}
+        <div className="flex flex-col gap-2">
+          <p className="text-xs font-bold text-gray-400 ml-3 mb-1 uppercase tracking-wider text-left">Extra Activities</p>
+          <div className="grid grid-cols-1 gap-2.5">
+            {serverData.quickActions.map((btn) => (
+              <a 
+                key={btn.id}
+                href={btn.url}
+                target="_blank"
+                rel="noreferrer"
+                className="flex items-center gap-4 p-4 bg-white/60 backdrop-blur-sm border border-gray-100 rounded-[20px] transition-all group hover:bg-purple-50"
+              >
+                <div className="p-2.5 rounded-xl bg-white shadow-sm transition-colors text-purple-500">
+                  {getIcon(btn.type)}
+                </div>
+                <span className="text-sm font-bold text-gray-600 group-hover:text-gray-900 transition-colors">
+                  {btn.label}
+                </span>
+                <ExternalLink className="w-3.5 h-3.5 ml-auto text-gray-300 opacity-0 group-hover:opacity-100 transition-all transform group-hover:translate-x-1" />
+              </a>
+            ))}
+          </div>
+        </div>
+
+      </div>
+    </div>
+  );
+}
