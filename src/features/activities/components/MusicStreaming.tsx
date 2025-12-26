@@ -1,103 +1,139 @@
-import React from 'react';
-import { Music, ExternalLink, PlayCircle, Headphones } from 'lucide-react';
+import React, { useState } from 'react';
+import { Music, ChevronRight, ChevronLeft, Info, ExternalLink } from 'lucide-react';
 import { useJsonData } from '../../../hooks/useJsonData';
 
+// JSON 데이터 타입 정의
 interface Platform {
   name: string;
   url: string;
   iconImg: string;
 }
 
+interface Guide {
+  title: string;
+  image: string;
+}
+
 interface StreamingData {
   songTitle: string;
   Img: string;
   platforms: Platform[];
+  guides?: Guide[];
 }
 
-export function MusicStreaming() {
+export function StreamingSection() {
+  // 데이터 불러오기
   const { data, loading, error } = useJsonData<StreamingData>('streaming');
+  const [currentGuideIdx, setCurrentGuideIdx] = useState(0);
 
-  if (loading) return <div className="p-8 text-center text-gray-400">로딩 중...</div>;
-  if (error) return <div className="p-8 text-center text-red-400">데이터를 불러올 수 없습니다.</div>;
+  if (loading) return <div className="p-6 text-center text-gray-500">데이터 불러오는 중...</div>;
+  if (error || !data) return null;
+
+  const guides = data.guides || [];
+  const hasGuides = guides.length > 0;
+
+  // 슬라이드 이전/다음 핸들러
+  const prevGuide = () => {
+    setCurrentGuideIdx((prev) => (prev === 0 ? guides.length - 1 : prev - 1));
+  };
+
+  const nextGuide = () => {
+    setCurrentGuideIdx((prev) => (prev === guides.length - 1 ? 0 : prev + 1));
+  };
 
   return (
-    // [컨테이너] Glassmorphism 스타일 통일
-    <div className="bg-white/70 backdrop-blur-xl rounded-[32px] p-6 shadow-sm border border-white/60 h-full flex flex-col">
-      
-      {/* 헤더 */}
-      <div className="flex items-center gap-3 mb-6 pl-2">
-        <div className="p-2 bg-pink-100 rounded-xl text-pink-500 shadow-sm">
-           <Music className="w-6 h-6" />
-        </div>
-        <div>
-          <h3 className="text-xl font-bold text-gray-800 leading-none">Streaming</h3>
-          <p className="text-xs text-gray-400 mt-1 font-medium">오늘의 권장 스트리밍 🎧</p>
-        </div>
+    <div className="bg-white/70 backdrop-blur-sm rounded-2xl p-6 shadow-lg border border-purple-100/50">
+      <div className="flex items-center gap-2 mb-6">
+        <Music className="w-5 h-5 text-purple-500" />
+        <h3 className="text-gray-800 font-bold">음원 스트리밍 가이드</h3>
       </div>
 
-      <div className="flex-1 overflow-y-auto custom-scrollbar pr-1">
-        <style>{`
-          .custom-scrollbar::-webkit-scrollbar { width: 4px; }
-          .custom-scrollbar::-webkit-scrollbar-track { background: transparent; }
-          .custom-scrollbar::-webkit-scrollbar-thumb { background: #e9d5ff; border-radius: 10px; }
-        `}</style>
-
-        {/* 앨범 아트 Hero 섹션 */}
-        <div className="relative w-full rounded-3xl overflow-hidden mb-6 p-6 flex flex-col items-center justify-center text-center group">
-          {/* 배경 블러 효과 */}
-          <div 
-            className="absolute inset-0 bg-cover bg-center blur-xl opacity-30 scale-110 transition-transform duration-700 group-hover:scale-125"
-            style={{ backgroundImage: `url(${data?.Img})` }} 
-          />
-          <div className="absolute inset-0 bg-gradient-to-b from-white/10 to-white/60" />
-
-          {/* 앨범 콘텐츠 */}
-          <div className="relative z-10 flex flex-col items-center">
-            <div className="relative">
-              <img 
-                src={data?.Img} 
-                alt={data?.songTitle} 
-                className="w-28 h-28 rounded-2xl shadow-lg object-cover mb-4 ring-4 ring-white/50 transition-transform duration-300 group-hover:scale-105 group-hover:rotate-1"
-              />
-              <div className="absolute -bottom-2 -right-2 bg-white p-1.5 rounded-full shadow-md text-pink-500">
-                <Headphones size={16} fill="currentColor" />
+      <div className="flex flex-col lg:flex-row gap-6">
+        {/* [왼쪽] 가이드 이미지 슬라이더 */}
+        <div className="lg:w-2/3 relative group">
+          <div className="relative aspect-video lg:aspect-auto lg:h-[280px] overflow-hidden rounded-2xl border border-purple-100 bg-gray-100">
+            {hasGuides ? (
+              <>
+                <img 
+                  src={guides[currentGuideIdx].image} 
+                  alt="Streaming Guide" 
+                  className="w-full h-full object-cover transition-all duration-500"
+                />
+                {/* 텍스트 오버레이 */}
+                <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent flex flex-col justify-end p-5">
+                  <span className="flex items-center gap-1 text-purple-300 text-xs font-bold mb-1">
+                    <Info className="w-3 h-3" /> GUIDE {currentGuideIdx + 1}/{guides.length}
+                  </span>
+                  <h4 className="text-white font-bold text-lg drop-shadow-md">
+                    {guides[currentGuideIdx].title}
+                  </h4>
+                </div>
+                
+                {/* 화살표 컨트롤 (호버 시 표시) */}
+                <div className="absolute inset-0 flex items-center justify-between p-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                  <button 
+                    onClick={prevGuide}
+                    className="p-2 rounded-full bg-black/30 hover:bg-black/50 text-white backdrop-blur-sm transition-colors"
+                  >
+                    <ChevronLeft className="w-6 h-6" />
+                  </button>
+                  <button 
+                    onClick={nextGuide}
+                    className="p-2 rounded-full bg-black/30 hover:bg-black/50 text-white backdrop-blur-sm transition-colors"
+                  >
+                    <ChevronRight className="w-6 h-6" />
+                  </button>
+                </div>
+              </>
+            ) : (
+              <div className="flex items-center justify-center h-full text-gray-400">
+                가이드 이미지가 없습니다.
               </div>
-            </div>
-            
-            <h4 className="font-bold text-gray-800 text-lg leading-tight px-4 break-keep">
-              {data?.songTitle}
-            </h4>
-            <span className="mt-2 text-[10px] font-bold text-pink-600 bg-pink-100 px-2 py-0.5 rounded-full uppercase tracking-wider">
-              Now Recommended
-            </span>
+            )}
           </div>
         </div>
 
-        {/* 플랫폼 리스트 */}
-        <div className="space-y-2.5">
-          {data?.platforms.map((p, idx) => (
-            <a
-              key={idx}
-              href={p.url}
-              target="_blank"
-              rel="noreferrer"
-              className="flex items-center justify-between p-3 pl-4 bg-white/60 hover:bg-white rounded-2xl border border-white hover:border-purple-100 shadow-sm hover:shadow-md transition-all duration-200 group"
-            >
-              <div className="flex items-center gap-3">
-                {/* 아이콘 이미지 (그림자 및 라운드 처리) */}
-                <div className="w-8 h-8 rounded-lg overflow-hidden bg-gray-50 flex items-center justify-center shadow-sm p-0.5">
-                  <img src={p.iconImg} alt={p.name} className="w-full h-full object-contain" />
-                </div>
-                <span className="text-sm font-bold text-gray-700 group-hover:text-purple-700 transition-colors">
-                  {p.name}
-                </span>
-              </div>
-              
-              <div className="pr-2 text-gray-300 group-hover:text-purple-400 transition-colors transform group-hover:scale-110">
-                <PlayCircle size={20} />
-              </div>
-            </a>
-          ))}
+        {/* [오른쪽] 타겟 곡 정보 & 바로가기 링크 */}
+        <div className="lg:w-1/3 flex flex-col gap-4">
+          
+          {/* 타겟 앨범 정보 (작게 표시) */}
+          <div className="flex items-center gap-3 p-3 bg-purple-50/50 rounded-xl border border-purple-100/30">
+            <img 
+              src={data.Img} 
+              alt={data.songTitle} 
+              className="w-10 h-10 rounded-lg object-cover shadow-sm"
+            />
+            <div className="overflow-hidden">
+              <p className="text-[10px] text-purple-500 font-bold uppercase tracking-wider">Target Song</p>
+              <p className="text-sm font-bold text-gray-800 truncate">{data.songTitle}</p>
+            </div>
+          </div>
+
+          <div className="flex flex-col gap-2 flex-1">
+            <p className="text-xs font-bold text-gray-400 ml-1 uppercase tracking-wider">Quick Link</p>
+            <div className="grid grid-cols-2 lg:grid-cols-1 gap-2 overflow-y-auto pr-1 custom-scrollbar max-h-[160px] lg:max-h-none">
+              {data.platforms.map((plat, idx) => (
+                <a
+                  key={idx}
+                  href={plat.url}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="flex items-center justify-between p-3 bg-white border border-gray-100 rounded-xl transition-all shadow-sm hover:border-purple-200 hover:shadow-md group"
+                >
+                  <div className="flex items-center gap-2">
+                    {/* JSON에 있는 아이콘 이미지 사용 */}
+                    <img src={plat.iconImg} alt={plat.name} className="w-5 h-5 object-contain" />
+                    <span className="font-bold text-sm text-gray-700 group-hover:text-purple-700 transition-colors">
+                      {plat.name}
+                    </span>
+                  </div>
+                  <div className="bg-gray-50 p-1 rounded-lg group-hover:bg-purple-50 transition-colors">
+                    <ExternalLink className="w-3 h-3 text-gray-400 group-hover:text-purple-500" />
+                  </div>
+                </a>
+              ))}
+            </div>
+          </div>
         </div>
       </div>
     </div>
