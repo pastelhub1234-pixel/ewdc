@@ -70,18 +70,20 @@ export function TodoList() {
   if (error || !serverData) return <div className="p-10 text-center text-red-400">데이터를 불러올 수 없습니다.</div>;
 
   return (
-    // [수정 완료] 
-    // flex-col 제거, sm: 조건 제거 -> 무조건 flex-row (가로 배치)
-    <div className="flex flex-row gap-4 h-full w-full min-h-[300px]">
+    // [레이아웃 수정: Grid 적용]
+    // flex 대신 grid를 사용하여 강제로 영역을 분할합니다.
+    // grid-cols-12: 전체를 12칸으로 나눔
+    // col-span-7 (왼쪽, 약 58%) : col-span-5 (오른쪽, 약 42%)
+    // 이렇게 하면 화면이 아무리 작아져도 비율대로 좌우 배치가 유지됩니다.
+    <div className="grid grid-cols-12 gap-4 h-full w-full min-h-[300px]">
       
-      {/* [왼쪽 영역] TODO 리스트 */}
-      {/* w-[60%] 고정: 화면이 작아도 무조건 60% 차지 */}
-      <div className="w-[60%] bg-white/60 backdrop-blur-sm rounded-2xl p-4 shadow-lg border border-purple-100/50 flex flex-col">
+      {/* [왼쪽 영역] TODO 리스트 (7칸 차지) */}
+      <div className="col-span-7 bg-white/60 backdrop-blur-sm rounded-2xl p-4 shadow-lg border border-purple-100/50 flex flex-col overflow-hidden">
         {/* 헤더 */}
         <div className="flex items-center justify-between mb-3 shrink-0">
           <div className="flex items-center gap-2">
             <CheckSquare className="w-5 h-5 text-purple-500 shrink-0" />
-            <h4 className="text-gray-800 font-bold text-base md:text-lg whitespace-nowrap">TODO</h4>
+            <h4 className="text-gray-800 font-bold text-base whitespace-nowrap">TODO</h4>
           </div>
           <span className="px-2 py-0.5 bg-gradient-to-r from-pink-200 to-peach-200 text-gray-700 rounded-full text-[10px] md:text-xs font-bold shrink-0">
             {completedCount}/{todos.length}
@@ -100,7 +102,7 @@ export function TodoList() {
                 type="checkbox"
                 checked={todo.completed}
                 readOnly
-                className="w-3.5 h-3.5 rounded md:rounded-md border-2 border-purple-300 text-purple-500 focus:ring-0 pointer-events-none shrink-0"
+                className="w-3.5 h-3.5 rounded border-2 border-purple-300 text-purple-500 focus:ring-0 pointer-events-none shrink-0"
               />
               
               <div className="flex-1 min-w-0 flex items-center justify-between gap-1">
@@ -130,19 +132,18 @@ export function TodoList() {
         </div>
       </div>
 
-      {/* [오른쪽 영역] 진척도 & 보상 */}
-      {/* w-[40%] 고정: 화면이 작아도 무조건 40% 차지 */}
-      <div className="w-[40%] flex flex-col gap-3 min-w-0">
+      {/* [오른쪽 영역] 진척도 & 보상 (5칸 차지) */}
+      <div className="col-span-5 flex flex-col gap-3 min-w-0">
         
         {/* 1. 진척도 바 */}
         <div className="bg-white/80 backdrop-blur-sm rounded-2xl p-4 border border-purple-100/50 shadow-lg flex flex-col justify-center shrink-0">
           <div className="flex justify-between items-end mb-2">
-            <span className="text-xl md:text-2xl font-black text-gray-800 tracking-tight">{progressPercent}%</span>
-            <span className="text-[9px] md:text-[10px] font-bold text-purple-500 bg-purple-50 px-1.5 py-0.5 rounded-full uppercase tracking-wider whitespace-nowrap">
+            <span className="text-xl font-black text-gray-800 tracking-tight">{progressPercent}%</span>
+            <span className="text-[9px] font-bold text-purple-500 bg-purple-50 px-1.5 py-0.5 rounded-full uppercase tracking-wider whitespace-nowrap">
                Progress
             </span>
           </div>
-          <div className="w-full h-2 md:h-3 bg-gray-100 rounded-full overflow-hidden shadow-inner">
+          <div className="w-full h-2 bg-gray-100 rounded-full overflow-hidden shadow-inner">
             <div 
               className="h-full bg-gradient-to-r from-purple-500 to-pink-500 rounded-full transition-all duration-1000 ease-out shadow-[0_0_15px_rgba(168,85,247,0.5)]"
               style={{ width: `${progressPercent}%` }}
@@ -150,7 +151,7 @@ export function TodoList() {
           </div>
         </div>
 
-        {/* 2. 보상 이미지 (남는 공간 채우기) */}
+        {/* 2. 보상 이미지 */}
         <div className="relative flex-1 rounded-2xl overflow-hidden border border-purple-100/50 shadow-lg bg-gray-100 group min-h-[100px]">
           <img 
             src={serverData.rewardImage.url} 
@@ -159,14 +160,14 @@ export function TodoList() {
             className="w-full h-full object-cover transition-all duration-700 absolute inset-0"
           />
           <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent flex flex-col justify-end p-3 text-left">
-            <p className="text-white font-bold text-sm md:text-base drop-shadow-md truncate">
+            <p className="text-white font-bold text-sm drop-shadow-md truncate">
               {progressPercent === 100 ? serverData.rewardImage.unlockedMessage : "🔒 완료 시 공개"}
             </p>
-            <p className="text-white/70 text-[9px] md:text-[10px] mt-0.5 truncate">{serverData.rewardImage.caption}</p>
+            <p className="text-white/70 text-[9px] mt-0.5 truncate">{serverData.rewardImage.caption}</p>
           </div>
         </div>
 
-        {/* 3. 퀵 액션 (2열 그리드) */}
+        {/* 3. 퀵 액션 (1열 or 2열 자동) */}
         <div className="grid grid-cols-1 xl:grid-cols-2 gap-2 shrink-0">
           {serverData.quickActions.map((btn) => (
             <a 
@@ -180,7 +181,7 @@ export function TodoList() {
               <div className="text-purple-500 shrink-0">
                 {getIcon(btn.type)}
               </div>
-              <span className="text-[10px] md:text-xs font-bold text-gray-600 truncate">
+              <span className="text-[10px] font-bold text-gray-600 truncate">
                 {btn.label}
               </span>
             </a>
