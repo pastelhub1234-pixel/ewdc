@@ -74,12 +74,14 @@ export function TodoList() {
   if (error || !serverData) return <div className="p-10 text-center text-red-400">데이터를 불러올 수 없습니다.</div>;
 
   return (
-    // 레이아웃: 모바일(세로) -> 노트북/PC(가로, lg breakpoint)
-    <div className="flex flex-col lg:flex-row gap-6 h-full min-h-[500px]">
+    // 레이아웃 수정: lg:flex-row -> md:flex-row (화면이 조금만 넓어도 가로 배치)
+    // gap-6 -> gap-4 md:gap-6 (작은 화면에서 간격 조정)
+    <div className="flex flex-col md:flex-row gap-4 md:gap-6 h-full min-h-[500px]">
       
-      {/* [왼쪽 영역] 디자인 수정됨: 심플한 리스트 스타일 */}
-      <div className="lg:w-3/5 bg-white/60 backdrop-blur-sm rounded-2xl p-6 shadow-lg border border-purple-100/50 flex flex-col">
-        {/* 헤더 (요청하신 스타일) */}
+      {/* [왼쪽 영역] 리스트 */}
+      {/* lg:w-3/5 -> md:w-3/5 (비율 유지하되 기준점 낮춤) */}
+      <div className="md:w-3/5 bg-white/60 backdrop-blur-sm rounded-2xl p-6 shadow-lg border border-purple-100/50 flex flex-col">
+        {/* 헤더 */}
         <div className="flex items-center justify-between mb-4">
           <div className="flex items-center gap-2">
             <CheckSquare className="w-5 h-5 text-purple-500" />
@@ -90,7 +92,7 @@ export function TodoList() {
           </span>
         </div>
 
-        {/* 리스트 아이템 (요청하신 스타일) */}
+        {/* 리스트 아이템 */}
         <div className="space-y-2 mb-3 flex-1 overflow-y-auto custom-scrollbar pr-2">
           {todos.map((todo) => (
             <div
@@ -135,8 +137,9 @@ export function TodoList() {
         </div>
       </div>
 
-      {/* [오른쪽 영역] 기존 유지 (진척도 & 보상 & 퀵 버튼) */}
-      <div className="lg:w-2/5 flex flex-col gap-6 font-sans">
+      {/* [오른쪽 영역] 진척도 & 보상 & 퀵 버튼 */}
+      {/* lg:w-2/5 -> md:w-2/5 (비율 유지하되 기준점 낮춤) */}
+      <div className="md:w-2/5 flex flex-col gap-6 font-sans">
         
         {/* 1. 직선형 진척도 바 */}
         <div className="bg-white/80 backdrop-blur-sm rounded-2xl p-6 border border-purple-100/50 shadow-lg flex flex-col justify-center">
