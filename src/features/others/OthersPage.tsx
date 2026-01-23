@@ -1,9 +1,9 @@
 // src/features/others/OthersPage.tsx
 import { NavLink, Outlet } from "react-router-dom";
 import {
-  Image, 
-  Mic,          // Mic2 -> Mic 로 변경 (구버전 호환)
-  Gamepad,      // Gamepad2 -> Gamepad 로 변경
+  Image,
+  Mic,
+  Gamepad,
   ShoppingBag,
   Megaphone,
   Bell
@@ -21,13 +21,13 @@ const otherSections = [
 export function OthersPage() {
   return (
     <div className="flex flex-col md:flex-row h-full w-full overflow-hidden bg-gradient-to-br from-emerald-50/50 to-teal-50/50">
-      
+
       {/* 1. 사이드바 */}
       <nav className="
         flex-shrink-0 z-20
         w-full md:w-64 h-auto md:h-full
         bg-white/60 backdrop-blur-md border-b md:border-b-0 md:border-r border-emerald-100
-        flex md:flex-col 
+        flex md:flex-col
         overflow-x-auto md:overflow-y-auto no-scrollbar
         p-2 md:p-4 gap-2
       ">
@@ -43,16 +43,25 @@ export function OthersPage() {
             className={({ isActive }) => `
               flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200
               whitespace-nowrap flex-shrink-0 md:w-full select-none
-              ${isActive 
-                ? "bg-white shadow-sm text-emerald-600 font-bold ring-1 ring-emerald-100 scale-[1.02]" 
+              ${isActive
+                ? "bg-white shadow-sm text-emerald-600 font-bold ring-1 ring-emerald-100 scale-[1.02]"
                 : "text-gray-500 hover:bg-white/50 hover:text-emerald-600"}
             `}
           >
-            <div className={isActive ? "text-emerald-500" : "opacity-70"}>{section.icon}</div>
-            <div className="flex flex-col text-left">
-              <span className="text-sm leading-none mb-0.5">{section.title}</span>
-              <span className="text-[10px] font-normal opacity-60 hidden md:block">{section.description}</span>
-            </div>
+            {/* [수정 핵심] 자식 요소를 함수로 감싸서 isActive를 가져옵니다 */}
+            {({ isActive }) => (
+              <>
+                <div className={isActive ? "text-emerald-500" : "opacity-70"}>
+                  {section.icon}
+                </div>
+                <div className="flex flex-col text-left">
+                  <span className="text-sm leading-none mb-0.5">{section.title}</span>
+                  <span className="text-[10px] font-normal opacity-60 hidden md:block">
+                    {section.description}
+                  </span>
+                </div>
+              </>
+            )}
           </NavLink>
         ))}
       </nav>
@@ -63,7 +72,7 @@ export function OthersPage() {
           <Outlet />
         </div>
       </main>
-      
+
     </div>
   );
 }
