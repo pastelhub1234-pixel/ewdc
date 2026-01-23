@@ -1,6 +1,6 @@
 import { Image } from "lucide-react";
 
-export function DailyFortune() {
+export function notice() {
   return (
     <div className="p-4 bg-white rounded-xl shadow space-y-2">
       <div className="flex items-center gap-2">
