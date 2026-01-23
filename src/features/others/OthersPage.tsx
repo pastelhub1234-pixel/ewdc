@@ -1,21 +1,25 @@
 // src/features/others/OthersPage.tsx
 import { NavLink, Outlet } from "react-router-dom";
 import {
-  Image, Mic2, Gamepad2, ShoppingBag, Megaphone, BellRing
+  Image, 
+  Mic,          // Mic2 -> Mic 로 변경 (구버전 호환)
+  Gamepad,      // Gamepad2 -> Gamepad 로 변경
+  ShoppingBag,
+  Megaphone,
+  Bell
 } from "lucide-react";
 
 const otherSections = [
   { id: "fanArt", title: "팬아트", description: "아카이브", icon: <Image size={20} />, path: "fanArt" },
-  { id: "karaoke", title: "노래방", description: "번호 찾기", icon: <Mic2 size={20} />, path: "karaoke" },
-  { id: "games", title: "팬게임", description: "게임 모음", icon: <Gamepad2 size={20} />, path: "games" },
+  { id: "karaoke", title: "노래방", description: "번호 찾기", icon: <Mic size={20} />, path: "karaoke" },
+  { id: "games", title: "팬게임", description: "게임 모음", icon: <Gamepad size={20} />, path: "games" },
   { id: "goods", title: "굿즈 거래", description: "교환/나눔", icon: <ShoppingBag size={20} />, path: "goods" },
   { id: "sinmungo", title: "신문고", description: "소통 창구", icon: <Megaphone size={20} />, path: "sinmungo" },
-  { id: "notice", title: "공지·의견", description: "개선 제안", icon: <BellRing size={20} />, path: "notice" },
+  { id: "notice", title: "공지·의견", description: "개선 제안", icon: <Bell size={20} />, path: "notice" },
 ];
 
 export function OthersPage() {
   return (
-    // [중요] flex-row가 있어야 왼쪽 사이드바가 생깁니다!
     <div className="flex flex-col md:flex-row h-full w-full overflow-hidden bg-gradient-to-br from-emerald-50/50 to-teal-50/50">
       
       {/* 1. 사이드바 */}
