@@ -1,7 +1,7 @@
 import { Routes, Route, Navigate } from "react-router-dom";
 import { OthersPage } from "./OthersPage";
 
-import { FanArtArchive } from "./components/FanArtArchive";
+import { FanArtArchive } from "./components/FanArtArchive"; 
 import { KaraokeNumberSearch } from "./components/KaraokeNumberSearch";
 import { FanGames } from "./components/FanGames";
 import { GoodsTrade } from "./components/GoodsTrade"; 
