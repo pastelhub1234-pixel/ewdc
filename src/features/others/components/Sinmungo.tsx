@@ -8,7 +8,7 @@ interface RankingItem {
   category: string;
 }
 
-export function KirinukiRanking() {
+export function Sinmungo() {
   const { data: rankings, loading } = useJsonData<RankingItem[]>('rankings');
 
   if (loading) return <div>랭킹 로딩 중...</div>;
