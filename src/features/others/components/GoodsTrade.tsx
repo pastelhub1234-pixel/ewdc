@@ -8,7 +8,7 @@ interface Statistics {
   time: string;
 }
 
-export function FandomStats() {
+export function GoodsTrade() {
   const { data: stats, loading } = useJsonData<Statistics>('statistics');
 
   if (loading) return <div>통계 불러오는 중...</div>;
